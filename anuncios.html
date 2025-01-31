@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday</title>
+
+    <!--Estilos-->
+    <link rel="stylesheet" href="assets/fonts/fontawesome-free-6.1.2-web/css/all.min.css">
+    <link rel="stylesheet" href="assets/fonts/poppins/poppins.css">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/stylesA.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+              <img src="assets/img/logo.svg" alt="">
+            </div>
+            <nav class="menu">
+              <ul>
+                <li><a href="Inicio.html">Inicio</a></li>
+                <li><a href="">Check</a></li>
+                <li><a href="">Comedor</a></li>
+                <li><a href="menu.html">Empleados</a></li>
+                <li><a href="anuncios.html">Anuncios</a></li>
+              </ul>
+            </nav>
+        </aside>
+  
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="top-bar">
+                <div class="user-info">
+                    <button class="user-button">
+                        Hola Iban Loeza <span class="dropdown-icon">▼</span>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <div class="notification-bell">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-dot"></span>
+                    </div>
+                    <span class="notification-count">13</span>
+                </div>
+            </header>
+            <div class="contenedor2">
+                  <!-- la cabezera del título "Reportes" y el botón para crear un nuevo anuncio -->
+  <div class="header">
+    <h2><b>Reportes</b></h2>
+    <button class="create-new" onclick="window.location.href='crearNuevo/crearNuevoAnuncio.html'">Crear nuevo</button>
+  </div>
+  <!-- termina la cabecera -->
+
+  <!-- aquí está el div de la barra de búsqueda, donde está el botón de buscar, el filtro y el input --> 
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <img src="src/search.svg" alt="Buscar" class="icon">
+      <input type="text" placeholder="Buscar reporte">
+    </div>
+    <button class="search">Buscar</button>
+    <button class="filter"><img src="assets/img/filter.svg" alt="Filtrar" class="icon"></button>
+  </div>
+  <!-- termina div -->
+
+  <!-- puse contenido para poder ver como se ven al final -->
+  <!-- esto sólo me servirá para probarlo antes de usar la api como tal -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>No. de anuncio</th>
+          <th>Título</th>
+          <th>Fecha de creación</th>
+          <th>Descripción</th>
+          <th>Estatus</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>00001</td>
+          <td>No habrá agua</td>
+          <td>20 / Sep / 2023</td>
+          <td>SN</td>
+          <td>Activo</td>
+          <td>
+            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
+            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
+        </td>
+        </tr>
+        <tr>
+        <td>00002</td>
+            <td>Ya hay fibra</td>
+            <td>1 / Oct / 2023</td>
+            <td>SN</td>
+            <td>Inactivo</td>
+            <td>
+              <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
+              <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
+            </td>
+        </tr>
+        <tr>
+          <td>00003</td>
+          <td>Ya hay vigilancia</td>
+          <td>6 / Nov / 2023</td>
+          <td>SN</td>
+          <td>Activo</td>
+          <td>
+            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
+            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
+        </td>
+        </tr>
+        <tr>
+          <td>00004</td>
+          <td>Nada nuevo</td>
+          <td>6 / Nov / 2023</td>
+          <td>SN</td>
+          <td>Activo</td>
+          <td>
+            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
+            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
+        </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- aquí termina el contenido -->
+
+  <!-- aquí está el "modal" para el botón de "eliminar", o la ventana emergente -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <h3>Eliminar</h3>
+      <br>
+      <p>¿Eliminar elemento?</p>
+      <br>
+      <div class="modal-buttons">
+        <button class="cancel-button">Cancelar</button>
+        <button class="delete-confirm-button">Eliminar</button>
+      </div>
+    </div>
+  </div>
+            </div>
+            
+        </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+  
+</html>

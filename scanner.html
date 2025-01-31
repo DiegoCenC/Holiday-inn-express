@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f3f4f7;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+
+        video {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        #resultMessage {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 8px;
+            font-size: 1rem;
+            display: none;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            animation: fadeInOut 3s ease forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Escáner QR</h1>
+    <video id="video" autoplay playsinline></video>
+    <p id="result">Resultado: Ninguno</p>
+    <div id="resultMessage"></div>
+
+    <script>
+        const video = document.getElementById('video');
+        const resultText = document.getElementById('result');
+        const resultMessage = document.getElementById('resultMessage');
+        const canvas = document.createElement('canvas');
+        const canvasContext = canvas.getContext('2d');
+
+        let scanning = false;
+
+        window.addEventListener('load', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+
+                video.addEventListener('loadedmetadata', () => {
+                    scanning = true;
+                    scanQRCode();
+                });
+            } catch (error) {
+                alert('No se pudo acceder a la cámara: ' + error.message);
+                console.error(error);
+            }
+        });
+
+        function scanQRCode() {
+            if (!scanning) return;
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (qrCode) {
+                scanning = false; // Pausa el escaneo
+                showResultMessage(`Escaneo exitoso scanee de nuevo`);
+                resultText.textContent = `Resultado: ${qrCode.data}`;
+                restartScan(); // Reactiva el escaneo
+            } else {
+                requestAnimationFrame(scanQRCode);
+            }
+        }
+
+        function showResultMessage(message) {
+            resultMessage.textContent = message;
+            resultMessage.style.display = 'block';
+
+            // Oculta el mensaje después de 3 segundos
+            setTimeout(() => {
+                resultMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        function restartScan() {
+            setTimeout(() => {
+                scanning = true;
+                scanQRCode();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+.contenedor2{
+  width: 100%;
+  padding: 24px 32px;
+}
+
+.header {
+  color: #1F4B79;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+.create-new {
+  width: 129px;
+  height: 38px;
+  padding: 8px 12px;
+  background-color: #35B167;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 15px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  height: 76px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-bar input {
+  width: 100%;
+  height: 44px;
+  padding-left: 40px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background-color: #EDEDED;
+}
+
+.search-input-wrapper .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.search {
+  color: white;
+  width: 86px;
+  height: 44px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #49B6E9;
+  text-align: center;
+  font-size: 15px;
+}
+
+.filter {
+  width: 44px;
+  height: 44px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #EDEDED;
+}
+
+.table-container {
+  width: 100%;
+  max-width: 95%p;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f8fa;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button.view, button.delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button.view img, button.delete img {
+  width: 16px;
+  height: 16px;
+}
+
+button.view {
+  color: #2196F3;
+}
+
+button.delete {
+  color: #f44336;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h3 {
+  color: #f44336;
+  margin-bottom: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel-button {
+  background-color: #E0E0E0;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.delete-confirm-button {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+/* 
+el fokin código para hacerlo responsive. no vuelvo a hacer CSS, o al menos si lo hago, hacerlo responsive
+espero tengan un buen teléfono y no un nokia todo pedorro 🤬🤬🤬
+ */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+  }
+
+  .create-new {
+    font-size: 14px;
+    width: 100px;
+  }
+
+  .table-container {
+    padding: 15px;
+  }
+
+  td:last-child {
+    gap: 4px;
+  }
+
+  button.view img, button.delete img {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 20px;
+  }
+
+  .search-bar {
+    width: 100%;
+    gap: 5px;
+    padding: 10px;
+  }
+
+  .search-bar input, .search, .filter {
+    width: 100%;
+    height: auto;
+  }
+
+  .table-container {
+    padding: 10px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  td:last-child {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  button.view img, button.delete img {
+    width: 12px; 
+    height: 12px;
+  }
+}
