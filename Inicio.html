@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday</title>
+    <title>Portafolio-Diego cen</title>
 
     <!--Estilos-->
     <link rel="stylesheet" href="assets/fonts/fontawesome-free-6.1.2-web/css/all.min.css">
     <link rel="stylesheet" href="assets/fonts/poppins/poppins.css">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/stylesA.css">
 </head>
 <body>
     <div class="container">
@@ -22,8 +21,8 @@
             <nav class="menu">
               <ul>
                 <li><a href="Inicio.html">Inicio</a></li>
-                <li><a href="">Check</a></li>
-                <li><a href="">Comedor</a></li>
+                <li><a href="cheack.html">Check</a></li>
+                <li><a href="comedor.html">Comedor</a></li>
                 <li><a href="menu.html">Empleados</a></li>
                 <li><a href="anuncios.html">Anuncios</a></li>
               </ul>
@@ -46,83 +45,11 @@
                     <span class="notification-count">13</span>
                 </div>
             </header>
-            <div class="contenedor2">
-                  <!-- la cabezera del título "Reportes" y el botón para crear un nuevo anuncio -->
-  
-  <!-- puse contenido para poder ver como se ven al final -->
-  <!-- esto sólo me servirá para probarlo antes de usar la api como tal -->
-  <div class="table-container">
-    <table>
-        <div class="header">
-            <h1>Check In/Check Out</h1>
-          </div>
-        
-          <!-- Barra de búsqueda y filtro -->
-          <div class="search-container">
-            <div class="search-bar">
-              <div class="input-container">
-                <span class="search-icon">
-                  <img src="/assets/img/search.svg" alt="Lupa">
-                </span>
-                <input type="text" id="search" placeholder="Buscar por ID...">
-              </div>
-              <button id="search-button">Buscar</button>
-              <select id="department-filter" class="department-filter">
-                <option value="">Todos</option>
-                <option value="mantenimiento">Mantenimiento</option>
-                <option value="áreas públicas">Áreas Públicas</option>
-                <option value="seguridad">Seguridad</option>
-                <option value="ama de llaves">Ama de Llaves</option>
-              </select>
-            </div>
-          </div>
-          
-        
-          <!-- Tabla de empleados -->
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>No. de empleado</th>
-                  <th>Empleado</th>
-                  <th>Departamento</th>
-                  <th>Hora de entrada</th>
-                  <th>Hora de salida</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody id="table-body">
-                <!-- Los datos de los empleados se cargarán aquí -->
-              </tbody>
-            </table>
-          </div>
-        
-          <!-- Paginación -->
-          <div class="pagination" id="pagination-container">
-            <!-- Botones de paginación se cargarán dinámicamente -->
-          </div>
-    </table>
-  </div>
-  <!-- aquí termina el contenido -->
-
-  <!-- aquí está el "modal" para el botón de "eliminar", o la ventana emergente -->
-  <div class="modal" id="deleteModal">
-    <div class="modal-content">
-      <h3>Eliminar</h3>
-      <br>
-      <p>¿Eliminar elemento?</p>
-      <br>
-      <div class="modal-buttons">
-        <button class="cancel-button">Cancelar</button>
-        <button class="delete-confirm-button">Eliminar</button>
-      </div>
-    </div>
-  </div>
-            </div>
+            
             
         </div>
     </div>
-    <script src="/assets/js/script.js"></script>
+    <script src="script.js"></script>
   </body>
   
 </html>

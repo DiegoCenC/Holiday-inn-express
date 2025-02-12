@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday</title>
+    <title>Portafolio-Diego cen</title>
 
     <!--Estilos-->
     <link rel="stylesheet" href="assets/fonts/fontawesome-free-6.1.2-web/css/all.min.css">
     <link rel="stylesheet" href="assets/fonts/poppins/poppins.css">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
   </head>
 <body>
     <div class="container">
@@ -21,8 +22,8 @@
             <nav class="menu">
               <ul>
                 <li><a href="Inicio.html">Inicio</a></li>
-                <li><a href="">Check</a></li>
-                <li><a href="">Comedor</a></li>
+                <li><a href="cheack.html">Check</a></li>
+                <li><a href="comedor.html">Comedor</a></li>
                 <li><a href="menu.html">Empleados</a></li>
                 <li><a href="anuncios.html">Anuncios</a></li>
               </ul>
@@ -53,55 +54,64 @@
                 </div>
                 <div class="top-bar2">
                   <input type="text" id="search" placeholder="Buscar empleado">
-                  <button onclick="searchEmployees()">Buscar</button>
+                  <button id="buscar" onclick="searchEmployees()">Buscar</button>
+                  <button class="filter"><img src="assets/img/filter.svg" alt="Filtrar" class="icon"></button>
                 </div>
                 <div id="createEmployeeModal" class="modal">
                   <div class="modal-content">
-                    <span class="close" onclick="closeCreateModal()">&times;</span>
-                    <h2 id="modalTitle">Crear Nuevo Empleado</h2>
-                    <h4>Usuarios/Empleado</h4>
+                    <span class="close" onclick="document.getElementById('createEmployeeModal').style.display='none'">&times;</span>
+                    <h2>Empleado / <span style="color: #007bff; font-weight: bold;">Agregar</span></h2>
+                    <div class="form-header">
+                      <label>Inquilino no. 00011</label>
+                      <button class="btn-cancel">Cancelar</button>
+                      <button class="btn-save">Guardar</button>
+                    </div>
                     <form id="createEmployeeForm">
-                      <label for="employeeName">Nombre:</label>
-                      <input type="text" id="employeeName" name="employeeName" required>
-                    
-                      <label for="email">Email:</label>
-                      <input type="email" id="email" name="email" required>
-                    
-                      <label for="department">Departamento:</label>
-                      <input type="text" id="department" name="department" required>
-                    
-                      <label for="phoneNumber">Teléfono:</label>
-                      <input type="text" id="phoneNumber" name="phoneNumber" required>
-                    
-                      <label for="address">Dirección:</label>
-                      <input type="text" id="address" name="address" required>
-                    
-                      <button type="button" onclick="createEmployee()">Guardar</button>
+                      <div class="form-group">
+                        <select id="createArea" required>
+                          <option value="">Área</option>
+                          <option value="admin">Administración</option>
+                          <option value="ventas">Ventas</option>
+                        </select>
+                        <input type="text" id="createEmployeeName" placeholder="Nombre" required>
+                        <input type="text" id="createLastName" placeholder="Apellido Paterno" required>
+                        <input type="text" id="createSecondLastName" placeholder="Apellido Materno">
+                      </div>
+                      <h3>Datos de contacto</h3>
+                      <div class="form-group">
+                        <input type="text" id="createPhoneNumber" placeholder="Teléfono" required>
+                        <input type="text" id="createPhoneNumber2" placeholder="Teléfono 2 (opcional)">
+                        <input type="email" id="createEmail" placeholder="Email" required>
+                      </div>
                     </form>
-                    
                   </div>
                 </div>
                 <div id="updateEmployeeModal" class="modal">
                   <div class="modal-content">
                     <span class="close" onclick="document.getElementById('updateEmployeeModal').style.display='none'">&times;</span>
-                    <h2>Actualizar Empleado</h2>
+                    <h2>Empleado / <span style="color: #007bff; font-weight: bold;">Agregar</span></h2>
+                    <div class="form-header">
+                      <label>Inquilino no. 00011</label>
+                      <button class="btn-cancel">Cancelar</button>
+                      <button class="btn-save">Guardar</button>
+                    </div>
                     <form id="updateEmployeeForm">
-                      <label for="updateEmployeeName">Nombre:</label>
-                      <input type="text" id="updateEmployeeName" required>
-                
-                      <label for="updateEmail">Email:</label>
-                      <input type="email" id="updateEmail" required>
-                
-                      <label for="updateDepartment">Departamento:</label>
-                      <input type="text" id="updateDepartment" required>
-                
-                      <label for="updatePhoneNumber">Teléfono:</label>
-                      <input type="text" id="updatePhoneNumber" required>
-                
-                      <label for="updateAddress">Dirección:</label>
-                      <input type="text" id="updateAddress" required>
-                
-                      <button type="button" onclick="saveUpdatedEmployee()">Guardar</button>
+                      <div class="form-group">
+                        <select id="updateArea" required>
+                          <option value="">Área</option>
+                          <option value="admin">Administración</option>
+                          <option value="ventas">Ventas</option>
+                        </select>
+                        <input type="text" id="updateEmployeeName" placeholder="Nombre" required>
+                        <input type="text" id="updateLastName" placeholder="Apellido Paterno" required>
+                        <input type="text" id="updateSecondLastName" placeholder="Apellido Materno">
+                      </div>
+                      <h3>Datos de contacto</h3>
+                      <div class="form-group">
+                        <input type="text" id="updatePhoneNumber" placeholder="Teléfono" required>
+                        <input type="text" id="updatePhoneNumber2" placeholder="Teléfono 2 (opcional)">
+                        <input type="email" id="updateEmail" placeholder="Email" required>
+                      </div>
                     </form>
                   </div>
                 </div>
