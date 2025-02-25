@@ -7,7 +7,7 @@ body, html, * {
 
 body {
   font-family: Arial, sans-serif;
-  background: url('/assets/img/villa-lujo-piscina-espectacular-diseno-contemporaneo-arte-digital-bienes-raices-hogar-casa-propiedad-ge\ 1.png') no-repeat center center fixed;
+  background-image: url("../img/villa-lujo-piscina-espectacular-diseno-contemporaneo-arte-digital-bienes-raices-hogar-casa-propiedad-ge\ 1.png");
   background-size: cover;
   color: #333;
   display: flex;
@@ -50,7 +50,7 @@ body {
   padding: 20px;
   text-align: center;
   text-align: center;    
-  background: url('/assets/img/Group\ 1.svg') no-repeat center center fixed;
+  background-image: url("../img/Group\ 1.svg");
 }
 
 .logo-container img {
