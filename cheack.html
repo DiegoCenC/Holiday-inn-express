@@ -32,20 +32,29 @@
   
         <!-- Main Content -->
         <div class="main-content">
-            <header class="top-bar">
-                <div class="user-info">
-                    <button class="user-button">
-                        Hola Iban Loeza <span class="dropdown-icon">▼</span>
-                    </button>
-                </div>
-                <div class="notifications">
+          <header class="top-bar">
+            <!-- HTML -->
+            <div class="user-info">
+              <button class="user-button" id="userMenuButton">
+                Hola Iban Loeza <span class="dropdown-icon">▼</span>
+              </button>
+              <div class="none"></div>
+              <div class="dropdown-menu hidden" id="userDropdown">
+                <a href="#"><img src="assets/img/reader.svg" alt="reader"> Perfil</a>
+                <a href="#"><img src="assets/img/money.svg" alt="money"> Pagos</a>
+                <a href="index.html"><img src="assets/img/Logout.svg" alt="logout"> Cerrar sesión</a>
+              </div>
+            </div>
+                     
+            
+            <div class="notifications">
                     <div class="notification-bell">
-                        <span class="notification-icon">🔔</span>
-                        <span class="notification-dot"></span>
+                      <img src="assets/img/Bell.svg" alt="bell" class="noti">
+                      <img src="assets/img/Ellipse 4.svg" alt="ellipse">
                     </div>
                     <span class="notification-count">13</span>
-                </div>
-            </header>
+                  </div>
+                </header>
             <div class="contenedor2">
               <div class="container3">
                 <div class="nava">

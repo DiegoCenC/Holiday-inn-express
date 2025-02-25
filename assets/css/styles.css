@@ -114,6 +114,7 @@ body {
 }
 
 .user-button {
+  margin-top: 6px;
   background-color: transparent;
   border: 1px solid #57a6ff;
   color: #fff;
@@ -144,24 +145,13 @@ body {
 
 .notification-bell {
   position: relative;
-  margin-right: 10px;
+  margin-right: 16px;
+  display: flex;
 }
 
-.notification-icon {
-  font-size: 18px;
-  color: #283a6a;
+.noti{
+  margin-right: 16px;
 }
-
-.notification-dot {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  background-color: red;
-  border-radius: 50%;
-}
-
 .notification-count {
   font-size: 16px;
   color: red;
@@ -240,8 +230,8 @@ h2 {
   background-color: #f4f6f9;
   padding: 20px;
   margin-top: 115px;
- height: 850px;
-  width: 1490px;
+ height: 925px;
+  width: 1665px;
  
   text-align: left;
   position: relative;
@@ -254,7 +244,7 @@ h2 {
 }
 .form-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -264,6 +254,7 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-left: 16px;
 }
 .btn-cancel {
   background-color: #d3d3d3;
@@ -330,3 +321,52 @@ input, select {
   cursor: pointer;
   background-color: #EDEDED;
 }
+
+/* Ocultar el menú por defecto */
+.hidden {
+  display: none;
+}
+
+/* Mostrar el menú cuando se hace hover sobre el contenedor */
+.user-info:hover .dropdown-menu {
+  display: block;
+}
+
+/* Estilo del menú desplegable */
+.dropdown-menu {
+  display: none;
+  position: absolute; /* Para que se muestre encima del contenido */
+  background-color: #fff; /* Fondo blanco */
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1000;
+  min-width: 180px; /* Ancho mínimo */
+  border-radius: 10px;
+}
+
+.dropdown-menu a {
+  display: flex;
+  align-items: center; /* Alinea icono y texto */
+  gap: 8px; /* Espaciado entre icono y texto */
+  padding: 8px 12px;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap; /* Evita que el texto salte de línea */
+}
+
+.dropdown-menu a:hover {
+  background-color: #f1f1f1; /* Fondo de los enlaces cuando se pasa el ratón */
+}
+
+.user-button:hover {
+  background-color: #0056b3;
+}
+.none{
+  display: block;
+  height: 6px;
+}
+
+
+
+
