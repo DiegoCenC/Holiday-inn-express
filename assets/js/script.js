@@ -1,6 +1,6 @@
 // URLs y credenciales
-const apiUrl = 'https://hie-3f29.onrender.com/api/employees';
-const authUrl = 'https://hie-3f29.onrender.com/auth/login';
+const apiUrl = 'https://devmace.onrender.com/api/employees';
+const authUrl = 'https://devmace.onrender.com/auth/login';
 
 // Obtener token de autenticación
 async function getAuthToken() {
@@ -24,6 +24,34 @@ async function getAuthToken() {
 function getStoredToken() {
   return localStorage.getItem('authToken');
 }
+
+//graficas
+
+document.addEventListener("DOMContentLoaded", function () {
+          const circles = document.querySelectorAll(".progress-circle");
+          const texts = document.querySelectorAll(".circle-text");
+
+          circles.forEach((circle, index) => {
+              let percentage = circle.getAttribute("data-percentage");
+              let offset = 314 - (314 * percentage) / 100;
+
+              setTimeout(() => {
+                  circle.style.transition = "stroke-dashoffset 2s ease-in-out";
+                  circle.style.strokeDashoffset = offset;
+              }, 500);
+
+              // Animar el porcentaje de texto
+              let currentPercentage = 0;
+              let interval = setInterval(() => {
+                  if (currentPercentage >= percentage) {
+                      clearInterval(interval);
+                  } else {
+                      currentPercentage++;
+                      texts[index].textContent = currentPercentage + "%";
+                  }
+              }, 20);
+          });
+      });
 
 // Obtener empleados
 async function fetchEmployees(page = 1, search = '', limit = 10) {
@@ -66,7 +94,7 @@ function renderEmployees(employees) {
           <img src="assets/img/eye.svg" alt="Ver">
         </button>
         <button class="action-btn" onclick="editEmployee(${employee.id_employee})">
-          <img src="assets/img/calendar.svg" alt="Editar">
+          <img src="assets/img/qr.svg" alt="Editar">
         </button>
         <button class="action-btn" onclick="deleteEmployee(${employee.id_employee})">
           <img src="assets/img/trash.svg" alt="Eliminar">
@@ -337,3 +365,5 @@ departmentFilter.addEventListener("change", filterByDepartment);
 
 // Cargar los empleados y configurar la paginación al principio
 loadEmployees();
+
+

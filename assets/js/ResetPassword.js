@@ -1,5 +1,5 @@
 // URL de la API para la solicitud de recuperación de contraseña
-const resetPasswordUrl = 'https://2acf-189-203-87-207.ngrok-free.app/auth/request-password-reset';
+const resetPasswordUrl = 'https://devmace.onrender.com/auth/request-password-reset';
 
 // Manejo del formulario
 document.getElementById('reset-password-form').addEventListener('submit', async (e) => {

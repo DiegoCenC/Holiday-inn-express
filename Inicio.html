@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="assets/fonts/poppins/poppins.css">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+
+  </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
@@ -54,11 +55,62 @@
                         <span class="notification-count">13</span>
                       </div>
                     </header>
+
+                    <div class="container3">
+                      <h2>Inicio</h2>
+              
+                      <div class="progress-container">
+                        <div class="progress-labels">
+                            <span><h3 style="font-size: 20px; color: #1F4B79;">Entradas</h3></span>
+                            <span>
+                                <span style="color: #28a745; font-size: 18px;">135 realizados</span> 
+                                <span style="color: red; font-size: 18px; margin-left: 16px;">12 Faltantes</span>
+                            </span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill">
+                                <span class="progress-text">89%</span>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="circles-container">
+                        <!-- ALL -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle class="progress-circle" data-percentage="25" cx="60" cy="60" r="50" stroke="black" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div class="circle-text"><h1>0%</h1></div>
+                            <div class="circle-label">ALL</div>
+                        </div>
+            
+                        <!-- Mantenimiento -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle class="progress-circle" data-percentage="100" cx="60" cy="60" r="50" stroke="green" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div class="circle-text">0%</div>
+                            <div class="circle-label">Mantenimiento</div>
+                        </div>
+            
+                        <!-- Recepción -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle class="progress-circle" data-percentage="75" cx="60" cy="60" r="50" stroke="goldenrod" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div class="circle-text">0%</div>
+                            <div class="circle-label">Recepción</div>
+                        </div>
+                    </div>
+                  </div>
             
             
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
   </body>
   
 </html>
