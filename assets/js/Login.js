@@ -24,7 +24,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
 
       // Redireccionar al usuario
       alert('Inicio de sesión exitoso. Redirigiendo...');
-      window.location.href = 'inicio.html'; // Cambia esto a la página principal
+      window.location.href = 'Inicio.html'; // Cambia esto a la página principal
     } else if (response.status === 401) {
       alert('Credenciales incorrectas. Intente de nuevo.');
     } else {
