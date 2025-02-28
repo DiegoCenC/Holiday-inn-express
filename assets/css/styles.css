@@ -276,22 +276,25 @@ h2 {
   background-color: #e7eaf3;
   cursor: pointer;
 }
-#employeeTable tbody{
-  
-}
+
 #pagination {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
+.actions{
+  height: 50px;
+}
 .action-btn{
-  background-color: #e7eaf3;
+  background-color: #ffffff;
   border: 0px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 2px;
+  margin-bottom: 8px;
   margin-right: 10px;
   align-items: left;
+  height: auto;
+
 }
 
 .pagination-button {
@@ -325,9 +328,19 @@ h2 {
   background-color: #f4f6f9;
   padding: 20px;
   margin-top: 15.5rem;
- height: 107rem;
+  height: 107rem;
   width: 187.5rem;
- 
+  text-align: left;
+  position: relative;
+}
+
+.modal-content2{
+  background-color: #f4f6f9;
+  padding: 20px;
+  margin-top: 7.2rem;
+  height: 107rem;
+  width: auto;
+  margin-left: 250px;
   text-align: left;
   position: relative;
 }
@@ -343,6 +356,14 @@ h2 {
   align-items: center;
   margin-bottom: 20px;
 }
+.form-header2 {
+  
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .btn-cancel, .btn-save {
   padding: 10px 15px;
   border: none;
@@ -351,8 +372,18 @@ h2 {
   font-size: 16px;
   margin-left: 16px;
 }
-.btn-cancel {
+.btn-cancel, .btn-cancel2 {
   background-color: #d3d3d3;
+  
+}
+
+.btn-cancel2{
+  margin-right: 25px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 .btn-save {
   background-color: #007bff;
@@ -409,7 +440,6 @@ input, select {
 }
 .filter {
   width: 44px;
-
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
@@ -462,8 +492,152 @@ input, select {
   height: 6px;
 }
 
+/* Encabezado */
+.form-header2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 10px;
+}
 
+.form-header2 h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
 
+/* Estilos de los campos */
+.modal-content2 p {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Negritas para títulos */
+.modal-content2 p strong {
+  min-width: 120px;
+  color: #212529;
+}
+
+/* Ajuste del botón de editar */
+.edit-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+}
+
+.edit-btn:hover {
+  background: #0056b3;
+}
+
+/* Modal QR */
+.qr-modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+/* Contenido del modal */
+.qr-modal-content {
+  background: white;
+  padding: 20px;
+  width: 462px;
+  height: 485px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Botón de cerrar */
+.qr-modal-close {
+  float: right;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Imagen del QR */
+.qr-modal-image {
+  width: 260px;
+  height: 260px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+}
+
+/* Información del QR */
+.qr-modal-info {
+  color: #FF5A5F;
+  font-size: 14px;
+  margin-top: 24px;
+}
+
+/* Toggle Switch */
+.qr-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-top: 15px;
+}
+
+.qr-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qr-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.qr-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .qr-slider {
+  background-color: #28a745;
+}
+
+input:checked + .qr-slider:before {
+  transform: translateX(26px);
+}
 
 @keyframes fillProgress {
   from {
@@ -476,9 +650,9 @@ input, select {
 
 @media (max-width: 1840px){
   .modal-content {
-    margin-top: 15.5rem;
-   height: 107rem;
-    width: 159rem;
+    margin-left: 250px;
+    min-width: auto;
+    width: 86.5%;
   }
 }
 @media (max-width: 600px) {

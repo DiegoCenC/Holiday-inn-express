@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Portafolio-Diego cen</title>
 
     <!--Estilos-->
@@ -64,8 +64,55 @@
                 <div class="top-bar2">
                   <input type="text" id="search" placeholder="Buscar empleado">
                   <button id="buscar" onclick="searchEmployees()">Buscar</button>
-                  <button class="filter"><img src="assets/img/filter.svg" alt="Filtrar" class="icon"></button>
+                  <button class="filter" id="openFilterModal">
+                    <img src="assets/img/filter.svg" alt="Filtrar" class="icon">
+                </button>
                 </div>
+                
+              
+              <!-- Modal de Filtros -->
+              <div id="filterModal" class="modal">
+                  <div class="modal-content">
+                      <span class="close" onclick="closeFilterModal()">&times;</span>
+                      <h2>Filtrar Empleados</h2>
+              
+                      <label for="filterStatus">Estado:</label>
+                      <select id="filterStatus">
+                          <option value="">Todos</option>
+                          <option value="activo">Activo</option>
+                          <option value="baja">Baja</option>
+                      </select>
+              
+                      <label for="filterDepartment">Departamento:</label>
+                      <select id="filterDepartment">
+                          <option value="">Todos</option>
+                          <option value="Alimentos y bebidas">Alimentos y bebidas</option>
+                          <option value="Ana de llaves">Ana de llaves</option>
+                          <option value="Mantenimiento">Mantenimiento</option>
+                      </select>
+              
+                      <button class="apply-filters" onclick="applyFilterModal()">Aplicar Filtros</button>
+                  </div>
+              </div>
+
+              <!-- Modal para visualizar el QR y habilitar/deshabilitar -->
+<div id="qrModalContainer" class="qr-modal">
+  <div class="qr-modal-content">
+      <span class="qr-modal-close" onclick="closeQrModal()">&times;</span>
+      <h2>QR Único por Empleado</h2>
+      
+      <img id="qrModalImage" src="" alt="QR Code" class="qr-modal-image">
+
+      <p class="qr-modal-info">En caso de tener algún problema con el empleado, puedes <b>habilitar o deshabilitar</b> el código QR.</p>
+
+      <!-- Botón toggle -->
+      <label class="qr-toggle-switch">
+          <input type="checkbox" id="qrToggleSwitch" onchange="toggleQrState()">
+          <span class="qr-slider"></span>
+      </label>
+  </div>
+</div>
+
                 <div id="createEmployeeModal" class="modal">
                   <div class="modal-content">
                     <span class="close" onclick="document.getElementById('createEmployeeModal').style.display='none'">&times;</span>
@@ -122,6 +169,22 @@
                         <input type="email" id="updateEmail" placeholder="Email" required>
                       </div>
                     </form>
+                  </div>
+                </div>
+
+                <div id="employeeModal" class="modal">
+                  <div class="modal-content2">
+                    <div class="form-header2">
+                      <button class="btn-cancel2">Cancelar</button>
+                      <h2>Detalles del Empleado</h2>
+                    </div>
+                    
+                    <p><strong>ID:</strong> <span id="modalId"></span></p>
+                    <p><strong>Nombre:</strong> <span id="modalName"></span></p>
+                    <p><strong>Departamento:</strong> <span id="modalDepartment"></span></p>
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Dirección:</strong> <span id="modalAddress"></span></p>
+                    <p><strong>Estado:</strong> <span id="modalStatus"></span></p>
                   </div>
                 </div>
                 

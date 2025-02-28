@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
 // Obtener empleados
-async function fetchEmployees(page = 1, search = '', limit = 10) {
+async function fetchEmployees(page = 1, search = '', limit = 15) {
   const token = getStoredToken() || await getAuthToken();
   if (!token) return;
 
@@ -89,7 +89,7 @@ function renderEmployees(employees) {
       <td>${employee.employeeName}</td>
       <td>${employee.department}</td>
       <td>${employee.status || 'Activo'}</td>
-      <td style="display: flex;">
+      <td class="actions" style="display: flex;">
         <button class="action-btn" onclick="viewEmployee(${employee.id_employee})">
           <img src="assets/img/eye.svg" alt="Ver">
         </button>
@@ -105,19 +105,95 @@ function renderEmployees(employees) {
   });
 }
 
+async function viewEmployee(id) {
+  const token = getStoredToken();
+  if (!token) {
+    alert("No tienes un token de autenticación válido.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/${id}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener los datos del empleado');
+    }
+
+    const employee = await response.json();
+
+    // Asegurar que los elementos existen antes de asignar valores
+    const modalId = document.getElementById('modalId');
+    const modalName = document.getElementById('modalName');
+    const modalDepartment = document.getElementById('modalDepartment');
+    const modalEmail = document.getElementById('modalEmail');
+    const modalAddress = document.getElementById('modalAddress');
+    const modalStatus = document.getElementById('modalStatus');
+
+    if (modalId && modalName && modalDepartment && modalEmail && modalAddress && modalStatus) {
+      modalId.innerText = employee.id_employee;
+      modalName.innerText = employee.employeeName;
+      modalDepartment.innerText = employee.department;
+      modalEmail.innerText = employee.email;
+      modalAddress.innerText = employee.address;
+      modalStatus.innerText = employee.status || 'Activo';
+
+      // Mostrar el modal
+      document.getElementById('employeeModal').style.display = 'block';
+    } else {
+      console.error('No se encontraron los elementos del modal.');
+    }
+
+  } catch (error) {
+    console.error('Error:', error);
+    alert('No se pudo obtener la información del empleado.');
+  }
+  
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById('employeeModal');
+  const closeButton = document.querySelector(".close");
+  const cancelButton = document.querySelector(".btn-cancel2");
+
+  function closeModal() {
+      modal.style.display = 'none';
+  }
+
+  if (closeButton) {
+      closeButton.addEventListener("click", closeModal);
+  }
+
+  if (cancelButton) {
+      cancelButton.addEventListener("click", closeModal);
+  }
+});
 
 // Crear empleado
 async function createEmployee() {
   const token = getStoredToken() || await getAuthToken();
   if (!token) return;
 
-  // Obtener datos del formulario
+  // Evento para cerrar el modal al hacer clic en "Cancelar"
+  
+
+  
+
+  // Obtener datos del formulario (IDs deben coincidir con el HTML)
   const employeeData = {
-    employeeName: document.getElementById('employeeName').value,
-    email: document.getElementById('email').value,
-    department: document.getElementById('department').value,
-    phoneNumber: document.getElementById('phoneNumber').value,
-    address: document.getElementById('address').value
+    area: document.getElementById('createArea').value,
+    employeeName: document.getElementById('createEmployeeName').value,
+    lastName: document.getElementById('createLastName').value,
+    secondLastName: document.getElementById('createSecondLastName').value,
+    phoneNumber: document.getElementById('createPhoneNumber').value,
+    phoneNumber2: document.getElementById('createPhoneNumber2').value,
+    email: document.getElementById('createEmail').value
+    // Si tu API requiere 'department' en vez de 'area', ajusta la clave:
+    // department: document.getElementById('createArea').value,
   };
 
   try {
@@ -245,6 +321,8 @@ function closeCreateModal() {
   document.getElementById('createEmployeeModal').style.display = 'none';
 }
 
+document.querySelector(".btn-cancel").addEventListener("click", closeCreateModal);
+document.querySelector(".btn-save").addEventListener("click", createEmployee);
 // Buscar empleados
 function searchEmployees() {
   const searchQuery = document.getElementById('search').value;
@@ -264,64 +342,9 @@ const employeesPerPage = 15;
 let employeesData = []; // Todos los empleados
 let filteredData = []; // Empleados después de aplicar filtros
 
-// Función para cargar los empleados desde el archivo JSON
-async function loadEmployees() {
-  try {
-    const response = await fetch('employees.json'); // Asegúrate de que este archivo esté disponible
-    const employees = await response.json();
-    employeesData = employees; // Guardamos todos los empleados
-    filteredData = employeesData; // Inicializamos los empleados filtrados con todos los datos
-    updatePagination(); // Actualizamos la paginación
-    displayEmployees(getEmployeesForPage(currentPage)); // Mostramos la primera página de empleados
-  } catch (error) {
-    console.error('Error al cargar los datos:', error);
-  }
-}
 
-// Función para obtener empleados para la página actual
-function getEmployeesForPage(page) {
-  const startIndex = (page - 1) * employeesPerPage;
-  const endIndex = page * employeesPerPage;
-  return filteredData.slice(startIndex, endIndex); // Devolver empleados filtrados por la página actual
-}
 
-// Función para mostrar los empleados en la tabla
-function displayEmployees(employees) {
-  tableBody.innerHTML = ""; // Limpiar la tabla
-  employees.forEach(employee => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${employee.id_employee}</td>
-      <td>${employee.name}</td>
-      <td>${employee.department}</td>
-      <td>${employee.check_in_time}</td>
-      <td>${employee.check_out_time}</td>
-      <td>${employee.date}</td>
-    `;
-    tableBody.appendChild(row);
-  });
-}
 
-// Función para actualizar los botones de paginación
-function updatePagination() {
-  const totalPages = Math.ceil(filteredData.length / employeesPerPage);
-  paginationContainer.innerHTML = ""; // Limpiar los botones existentes
-
-  // Crear los botones de paginación
-  for (let i = 1; i <= totalPages; i++) {
-    const button = document.createElement("button");
-    button.textContent = i;
-    button.addEventListener("click", () => changePage(i));
-    paginationContainer.appendChild(button);
-  }
-}
-
-// Función para cambiar de página
-function changePage(page) {
-  currentPage = page;
-  displayEmployees(getEmployeesForPage(page)); // Mostrar empleados de la nueva página
-  highlightCurrentPage(); // Resaltar la página actual
-}
 
 // Resaltar el botón de la página actual
 function highlightCurrentPage() {
@@ -335,35 +358,149 @@ function highlightCurrentPage() {
   currentButton.style.fontWeight = "bold"; // Resaltar el texto
 }
 
-// Filtrar empleados por ID
-function filterById() {
-  const searchValue = searchInput.value.toLowerCase();
-  filteredData = employeesData.filter(employee => 
-    employee.id_employee.toLowerCase().includes(searchValue)
-  );
-  currentPage = 1; // Resetear a la primera página después de un filtro
-  updatePagination(); // Actualizar paginación con los empleados filtrados
-  displayEmployees(getEmployeesForPage(currentPage)); // Mostrar empleados de la primera página
+function searchEmployees() {
+  const searchQuery = document.getElementById('search').value.trim();
+  
+  if (!searchQuery) {
+    // Si el campo de búsqueda está vacío, recargar toda la lista de empleados
+    fetchEmployees();
+    return;
+  }
+
+  // Si el usuario ingresa un número, hacer una búsqueda por ID
+  if (!isNaN(searchQuery)) {
+    fetchEmployeeById(searchQuery);
+  } else {
+    // Si no es un número, realizar la búsqueda como texto
+    fetchEmployees(1, searchQuery);
+  }
 }
 
-// Filtrar empleados por departamento
-function filterByDepartment() {
-  const department = departmentFilter.value.toLowerCase();
-  filteredData = employeesData.filter(employee => 
-    department ? employee.department.toLowerCase() === department : true
-  );
-  currentPage = 1; // Resetear a la primera página después de un filtro
-  updatePagination(); // Actualizar paginación con los empleados filtrados
-  displayEmployees(getEmployeesForPage(currentPage)); // Mostrar empleados de la primera página
+// Función para obtener un solo empleado por ID
+async function fetchEmployeeById(id) {
+  const token = getStoredToken();
+  if (!token) {
+    alert("No tienes un token de autenticación válido.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Empleado no encontrado');
+    }
+
+    const employee = await response.json();
+
+    // Mostrar solo este empleado en la tabla
+    renderEmployees([employee]);
+  } catch (error) {
+    console.error('Error al buscar empleado:', error);
+    alert('No se encontró el empleado.');
+  }
 }
 
-// Evento para la búsqueda
-searchButton.addEventListener("click", filterById);
+// Abrir el modal de filtros
+document.getElementById('openFilterModal').addEventListener('click', function () {
+  document.getElementById('filterModal').style.display = 'flex';
+});
 
-// Evento para el filtro de departamento
-departmentFilter.addEventListener("change", filterByDepartment);
+// Cerrar el modal de filtros
+function closeFilterModal() {
+  document.getElementById('filterModal').style.display = 'none';
+}
 
-// Cargar los empleados y configurar la paginación al principio
-loadEmployees();
+// Aplicar los filtros del modal
+function applyFilterModal() {
+  const statusFilter = document.getElementById('filterStatus').value;
+  const departmentFilter = document.getElementById('filterDepartment').value;
 
+  // Llamar a fetchEmployees con los filtros aplicados
+  fetchEmployees(1, 15, '', statusFilter, departmentFilter);
 
+  // Cerrar el modal después de aplicar los filtros
+  closeFilterModal();
+}
+
+let currentEmployeeId = null;
+let qrEnabled = false;
+
+// Función para abrir el modal con los datos del QR del empleado
+async function editEmployee(employeeId) {
+    currentEmployeeId = employeeId; // Guardar el ID del empleado
+
+    const token = getStoredToken();
+    if (!token) return alert("No tienes un token válido.");
+
+    try {
+        // Obtener datos del empleado (incluido el QR)
+        const response = await fetch(`${apiUrl}/${employeeId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Error al obtener datos del empleado');
+
+        const employee = await response.json();
+
+        // Asignar QR y estado
+        document.getElementById('qrModalImage').src = generateQrCode(employee.id_employee);
+        qrEnabled = employee.enabled ?? false; // Si no existe, por defecto es false
+
+        // Actualizar el estado del toggle
+        document.getElementById('qrToggleSwitch').checked = qrEnabled;
+
+        // Mostrar el modal
+        document.getElementById('qrModalContainer').style.display = 'flex';
+
+    } catch (error) {
+        console.error('Error al cargar el QR:', error);
+    }
+}
+
+// Generar el QR (cambiar si tienes un endpoint para generarlo)
+function generateQrCode(employeeId) {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${employeeId}`;
+}
+
+// Función para cerrar el modal
+function closeQrModal() {
+    document.getElementById('qrModalContainer').style.display = 'none';
+}
+
+// Función para habilitar/deshabilitar el QR con el toggle
+async function toggleQrState() {
+    if (!currentEmployeeId) return;
+
+    const token = getStoredToken();
+    if (!token) return alert("No tienes un token válido.");
+
+    // Obtener el estado actual del toggle
+    qrEnabled = document.getElementById('qrToggleSwitch').checked;
+
+    try {
+        const response = await fetch(`${apiUrl}/${currentEmployeeId}/qr-state`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ enabled: qrEnabled })
+        });
+
+        if (!response.ok) throw new Error('Error al actualizar estado del QR');
+
+    } catch (error) {
+        console.error('Error al cambiar estado del QR:', error);
+    }
+}
