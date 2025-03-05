@@ -1,42 +1,38 @@
 // URLs y credenciales
 const authUrl = 'https://devmace.onrender.com/auth/login';
-const attendanceBaseUrl = 'https://devmace.onrender.com/api/securityBooth/attendance/daily';
+const attendanceBaseUrl = 'https://devmace.onrender.com/api/securityBooth/attendance/summary';
 
 document.addEventListener('keydown', function(event) {
-    if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-' || event.key === '=')) {
-      event.preventDefault();
-      console.warn("⚠️ Zoom bloqueado.");
-    }
-  });
-  document.addEventListener("wheel", function(event) {
-    if (event.ctrlKey) {
-      event.preventDefault();
-      console.warn("⚠️ Zoom con scroll bloqueado.");
-    }
-  }, { passive: false });
-  
-// Credenciales del usuario (reemplázalas con credenciales reales)
-const userCredentials = {
-  email: "TU_EMAIL_AQUI", // Reemplázalo con tu email
-  password: "TU_CONTRASEÑA_AQUI" // Reemplázalo con tu contraseña
-};
-
+  if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-' || event.key === '=')) {
+    event.preventDefault();
+    console.warn("⚠️ Zoom bloqueado.");
+  }
+});
+document.addEventListener("wheel", function(event) {
+  if (event.ctrlKey) {
+    event.preventDefault();
+    console.warn("⚠️ Zoom con scroll bloqueado.");
+  }
+}, { passive: false });
 // Obtener token de autenticación
 async function getAuthToken() {
   try {
     const response = await fetch(authUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userCredentials)
+      body: JSON.stringify({
+        email: "TU_EMAIL_AQUI",
+        password: "TU_PASSWORD_AQUI"
+      })
     });
 
     if (!response.ok) throw new Error('Error al autenticar');
 
     const data = await response.json();
-    localStorage.setItem('authToken', data.token); // Guardar token en localStorage
+    localStorage.setItem('authToken', data.token);
     return data.token;
   } catch (error) {
-    console.error("Error al obtener token:", error);
+    console.error("🚨 Error al obtener token:", error);
     return null;
   }
 }
@@ -46,140 +42,184 @@ function getStoredToken() {
   return localStorage.getItem('authToken');
 }
 
-// Función para obtener la asistencia diaria y actualizar la tabla
-async function loadAttendanceData() {
-    const tbody = document.querySelector("#employeeTable tbody");
-
-    // Obtener la fecha actual en formato YYYY-MM-DD
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-
-    const apiUrl = `${attendanceBaseUrl}/${formattedDate}`;
-
-    let token = getStoredToken();
-    if (!token) {
-        token = await getAuthToken(); // Si no hay token, obtenerlo
-        if (!token) {
-            console.error("No se pudo obtener el token de autenticación.");
-            return;
-        }
-    }
-
-    try {
-        const response = await fetch(apiUrl, {
-            headers: {
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            console.error("Error en la respuesta de la API:", response.status);
-            return;
-        }
-
-        const result = await response.json();
-
-        if (!result.success || !Array.isArray(result.data)) {
-            console.error("El formato de respuesta no es válido:", result);
-            return;
-        }
-
-        tbody.innerHTML = ""; // Limpiar contenido previo en la tabla
-
-        result.data.forEach(record => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${record.id_empleado}</td>
-                <td>${record.employeename || "Desconocido"}</td>
-                <td>${record.id_registro}</td>
-                <td style="color: ${record.estado === 'A tiempo' ? 'green' : 'red'};">
-                    ${record.hora_entrada || "No registrado"}
-                </td>
-                <td style="color: ${record.estado === 'A tiempo' ? 'green' : 'red'};">
-                    ${record.hora_salida || "No registrado"}
-                </td>
-
-                <td>${record.fecha_registro ? record.fecha_registro.split("T")[0] : "No registrado"}</td>
-                <td>${record.estado}</td>
-            `;
-            tbody.appendChild(row);
-        });
-
-    } catch (error) {
-        console.error("Error al obtener los datos de asistencia:", error);
-    }
+// Función para obtener la fecha seleccionada o usar la actual
+function getSelectedDate() {
+  const dateInput = document.getElementById("dateFilter");
+  return dateInput ? dateInput.value : new Date().toISOString().split("T")[0];
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadAttendanceData();
-    
-    // Eventos para búsqueda y filtros
-    document.getElementById("buscar").addEventListener("click", filterTable);
-    document.getElementById("filterButton").addEventListener("click", toggleFilterDropdown);
-    document.getElementById("applyFilters").addEventListener("click", applyFilters);
-    document.addEventListener("click", closeFilterDropdownOnClickOutside);
-  
-    // Detectar Enter en el campo de búsqueda
-    document.getElementById("search").addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        event.preventDefault(); // Evita recarga
-        filterTable(); // Ejecutar búsqueda
-      }
-    });
-  });
-  
-  // Función para abrir/cerrar el dropdown de filtros
-  function toggleFilterDropdown(event) {
-    event.stopPropagation(); // Evita que se cierre al hacer clic en el botón
-    const dropdown = document.getElementById("filterDropdown");
-    dropdown.classList.toggle("hidden-filter");
-  }
-  
-  // Función para cerrar el dropdown al hacer clic fuera de él
-  function closeFilterDropdownOnClickOutside(event) {
-    const dropdown = document.getElementById("filterDropdown");
-    if (!dropdown.contains(event.target) && !event.target.matches("#filterButton")) {
-      dropdown.classList.add("hidden-filter");
+// Función para obtener los datos de asistencia
+async function loadAttendanceData() {
+  const tbody = document.querySelector("#employeeTable tbody");
+  const selectedDate = getSelectedDate();
+  const apiUrl = `${attendanceBaseUrl}?date=${selectedDate}`;
+
+  let token = getStoredToken();
+  if (!token) {
+    token = await getAuthToken();
+    if (!token) {
+      console.error("🚨 No se pudo obtener el token.");
+      return;
     }
   }
-  
-  // Aplicar filtros desde el dropdown
-  function applyFilters() {
-    filterTable(); // Aplica los filtros a la tabla
-    document.getElementById("filterDropdown").classList.add("hidden-filter"); // Cierra el dropdown
-  }
-  
-  // Función para filtrar la tabla
-  function filterTable() {
-    const searchTerm = document.getElementById("search").value.toLowerCase();
-    const selectedDepartment = document.getElementById("departmentFilter").value.toLowerCase();
-    const selectedStatus = document.getElementById("statusFilter").value.toLowerCase();
-    const selectedDate = document.getElementById("dateFilter").value; // YYYY-MM-DD
-  
-    const rows = document.querySelectorAll("#employeeTable tbody tr");
-  
-    rows.forEach(row => {
-      const idEmpleado = row.children[0].textContent.toLowerCase(); // Número de empleado
-      const nombre = row.children[1].textContent.toLowerCase(); // Nombre
-      const departamento = row.children[2].textContent.toLowerCase(); // Departamento
-      const fechaRegistro = row.children[5].textContent; // Fecha (YYYY-MM-DD)
-      const estado = row.children[6].textContent.toLowerCase(); // Estado (A tiempo, tarde, etc.)
-  
-      // Condiciones de filtrado
-      const matchSearch = idEmpleado.includes(searchTerm) || nombre.includes(searchTerm);
-      const matchDepartment = selectedDepartment === "" || departamento.includes(selectedDepartment);
-      const matchStatus = selectedStatus === "" || estado.includes(selectedStatus);
-      const matchDate = selectedDate === "" || fechaRegistro === selectedDate;
-  
-      if (matchSearch && matchDepartment && matchStatus && matchDate) {
-        row.style.display = ""; // Mostrar si cumple los filtros
-      } else {
-        row.style.display = "none"; // Ocultar si no cumple los filtros
+
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`
       }
     });
+
+    if (!response.ok) {
+      console.error("🚨 Error en la API:", response.status);
+      return;
+    }
+
+    const result = await response.json();
+    console.log("📥 Datos recibidos:", result);
+
+    // Limpiar la tabla antes de agregar nuevos datos
+    tbody.innerHTML = "";
+
+    if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6">No hay registros para esta fecha</td></tr>`;
+      return;
+    }
+
+    // Llenar la tabla con los datos recibidos
+    result.data.forEach(record => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${record.id_employee}</td>
+        <td>${record.employeename || "Desconocido"}</td>
+        <td>${record.department || "Sin departamento"}</td>
+        <td style="color: ${record.estado === 'A tiempo' ? 'green' : 'red'};">
+          ${record.ultima_entrada || "No registrado"}
+        </td>
+        <td style="color: ${record.estado === 'A tiempo' ? 'green' : 'red'};">
+          ${record.ultima_salida || "No registrado"}
+        </td>
+        <td>${new Date().toISOString().split('T')[0]}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+  } catch (error) {
+    console.error("🚨 Error en la solicitud:", error);
   }
+}
+
+// Cargar datos al iniciar la página
+document.addEventListener("DOMContentLoaded", () => {
+  loadAttendanceData();
+
+  // Evento para cambiar la fecha y actualizar la tabla
+  document.getElementById("dateFilter").addEventListener("change", loadAttendanceData);
+});
+// Función para filtrar la tabla
+function filterTable() {
+  const searchTerm = document.getElementById("search").value.toLowerCase();
+  const rows = document.querySelectorAll("tbody tr");
   
+  rows.forEach(row => {
+    const id = row.cells[0].textContent.toLowerCase();
+    const name = row.cells[1].textContent.toLowerCase();
+    const dept = row.cells[2].textContent.toLowerCase();
+    
+    // Buscar en todas las columnas relevantes
+    if (id.includes(searchTerm) || 
+        name.includes(searchTerm) || 
+        dept.includes(searchTerm)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
+// Agregar evento de escucha al campo de búsqueda existente
+document.getElementById("search").addEventListener("input", filterTable);
+
+// Agregar estilos al contenedor de filtros
+const filterContainer = document.querySelector('.filter-container');
+if (filterContainer) {
+  filterContainer.style.marginTop = '20px';
+  filterContainer.style.marginBottom = '20px';
+  filterContainer.style.padding = '15px';
+  filterContainer.style.backgroundColor = '#f8f9fa';
+  filterContainer.style.borderRadius = '8px';
+  filterContainer.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+}
+
+// Mejorar estilos del input de fecha
+const dateFilter = document.getElementById('dateFilter');
+if (dateFilter) {
+  dateFilter.style.padding = '8px 12px';
+  dateFilter.style.border = '1px solid #ced4da';
+  dateFilter.style.borderRadius = '4px';
+  dateFilter.style.fontSize = '14px';
+  dateFilter.style.marginLeft = '10px';
+}
+
+// Mejorar estilos de la etiqueta
+const dateLabel = document.querySelector('label[for="dateFilter"]');
+if (dateLabel) {
+  dateLabel.style.fontWeight = '500';
+  dateLabel.style.color = '#495057';
+}
+
+
+// Mostrar/ocultar el menú de filtros
+document.getElementById('filterButton').addEventListener('click', function() {
+  document.getElementById('filterDropdown').classList.toggle('hidden-filter');
+});
+
+// Función para aplicar los filtros avanzados
+function applyAdvancedFilters() {
+  const department = document.getElementById('departmentFilter').value;
+  const status = document.getElementById('statusFilter').value;
+  const filterDate = document.getElementById('dateFilterDropdown').value;
+  
+  const rows = document.querySelectorAll("#employeeTable tbody tr");
+  
+  rows.forEach(row => {
+    const deptValue = row.cells[2].textContent.trim();
+    const entryTime = row.cells[3].textContent.trim();
+    const dateValue = row.cells[5].textContent.trim();
+    
+    // Determinar el estado basado en la hora de entrada
+    let currentStatus = "A tiempo";
+    if (entryTime.includes("09:") || entryTime.includes("10:") || 
+        entryTime.includes("11:") || entryTime.includes("12:")) {
+      currentStatus = "Tarde";
+    }
+    
+    let showRow = true;
+    
+    // Aplicar filtro de departamento
+    if (department && deptValue.toLowerCase() !== department.toLowerCase()) {
+      showRow = false;
+    }
+    
+    // Aplicar filtro de estado
+    if (status && currentStatus !== status) {
+      showRow = false;
+    }
+    
+    // Aplicar filtro de fecha
+    if (filterDate && dateValue !== filterDate) {
+      showRow = false;
+    }
+    
+    row.style.display = showRow ? "" : "none";
+  });
+  
+  // Ocultar el menú de filtros después de aplicar
+  document.getElementById('filterDropdown').classList.add('hidden-filter');
+}
+
+
+
+
+

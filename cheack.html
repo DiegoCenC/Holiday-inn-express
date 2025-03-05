@@ -59,7 +59,12 @@
             <div class="contenedor2">
               <div class="container3">
                 <div class="nava">
-                  <h2>Check In/Check Out</h2>
+                  <h2 class="title">Check In/Check Out</h2>
+                  <div class="date-selector">
+                    <label for="dateFilter" class="date-label">Seleccionar Fecha:</label>
+                    <input type="date" id="dateFilter" class="date-input">
+                  </div>
+
                 </div>
                 <div class="top-bar2">
                   <input type="text" id="search" placeholder="Buscar empleado">
@@ -83,17 +88,18 @@
                       <label for="statusFilter" class="filter-dropdown-label">Estado:</label>
                       <select id="statusFilter" class="filter-dropdown-select">
                         <option value="">Todos</option>
-                        <option value="a tiempo">A tiempo</option>
-                        <option value="tarde">Tarde</option>
+                        <option value="A tiempo">A tiempo</option>
+                        <option value="Tarde">Tarde</option>
                       </select>
                   
-                      <label for="dateFilter" class="filter-dropdown-label">Fecha:</label>
-                      <input type="date" id="dateFilter" class="filter-dropdown-input">
+                      <label for="dateFilterDropdown" class="filter-dropdown-label">Fecha:</label>
+                      <input type="date" id="dateFilterDropdown" class="filter-dropdown-input">
                   
-                      <button id="applyFilters" class="apply-filter-btn">Aplicar Filtros</button>
+                      <button id="applyFilters" class="apply-filter-btn" onclick="applyAdvancedFilters()">Aplicar Filtros</button>
                     </div>
                   </div>
-                  
+
+                
                   
                 </div>
                 
@@ -107,7 +113,6 @@
                       <th>Hora de entrada</th>
                       <th>Hora de salida</th>
                       <th>Fecha</th>
-                      <th>Estatus</th>
                     </tr>
                   </thead>
                   <tbody>
