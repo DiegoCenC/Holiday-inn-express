@@ -1,139 +1,503 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday</title>
+    <title>Escáner QR</title>
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #2196F3;
+            --success-color: #4CAF50;
+            --background-color: #121212;
+            --text-color: #ffffff;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-            background: #f3f4f7;
-            color: #333;
-            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header {
+            padding: 1rem;
+            background: rgba(33, 33, 33, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
-            font-size: 2rem;
-            color: #4CAF50;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .scanner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
         }
 
         video {
-            width: 100%;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            position: absolute;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .scan-region {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 400px;
+            height: 80vw;
+            max-height: 400px;
+            border: 3px solid var(--primary-color);
+            border-radius: 24px;
+            box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.7);
+            z-index: 100;
+        }
+
+        .scan-region::before,
+        .scan-region::after,
+        .scan-region .corner-tl,
+        .scan-region .corner-tr,
+        .scan-region .corner-bl,
+        .scan-region .corner-br {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--primary-color);
+        }
+
+        .scan-region .corner-tl {
+            top: -4px;
+            left: -4px;
+            border-right: 0;
+            border-bottom: 0;
+            border-radius: 16px 0 0 0;
+        }
+
+        .scan-region .corner-tr {
+            top: -4px;
+            right: -4px;
+            border-left: 0;
+            border-bottom: 0;
+            border-radius: 0 16px 0 0;
+        }
+
+        .scan-region .corner-bl {
+            bottom: -4px;
+            left: -4px;
+            border-right: 0;
+            border-top: 0;
+            border-radius: 0 0 0 16px;
+        }
+
+        .scan-region .corner-br {
+            bottom: -4px;
+            right: -4px;
+            border-left: 0;
+            border-top: 0;
+            border-radius: 0 0 16px 0;
+        }
+
+        .scanning-line {
+            position: absolute;
+            width: calc(100% + 6px);
+            height: 3px;
+            background: var(--primary-color);
+            left: -3px;
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 8px var(--primary-color);
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                top: calc(100% - 3px);
+                opacity: 1;
+            }
         }
 
         #result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: #555;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: rgba(33, 33, 33, 0.95);
+            backdrop-filter: blur(10px);
+            margin: 0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         #resultMessage {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
             position: fixed;
-            top: 20px;
+            top: 80px;
             left: 50%;
             transform: translateX(-50%);
-            border-radius: 8px;
+            background: var(--success-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
             font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             display: none;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            animation: fadeInOut 3s ease forwards;
+            z-index: 1000;
+            animation: slideIn 0.3s ease forwards;
         }
 
-        @keyframes fadeInOut {
-            0% {
+        .restart-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-button:hover {
+            background: #1976D2;
+        }
+
+        .restart-button:active {
+            transform: scale(0.95);
+        }
+
+        .camera-error {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(33, 33, 33, 0.95);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 1001;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .error-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .error-button:hover {
+            background: #1976D2;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -20px);
                 opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
             }
-            10% {
+            to {
+                transform: translate(-50%, 0);
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
             }
         }
     </style>
 </head>
 <body>
-    <h1>Escáner QR</h1>
-    <video id="video" autoplay playsinline></video>
-    <p id="result">Resultado: Ninguno</p>
-    <div id="resultMessage"></div>
+    <div class="app-container">
+        <header class="header">
+            <h1>Escáner QR</h1>
+            <button class="restart-button" id="restartButton">Reiniciar cámara</button>
+        </header>
+        
+        <div class="scanner-container">
+            <video id="video" autoplay playsinline></video>
+            <div class="scan-region">
+                <div class="corner-tl"></div>
+                <div class="corner-tr"></div>
+                <div class="corner-bl"></div>
+                <div class="corner-br"></div>
+                <div class="scanning-line"></div>
+            </div>
+        </div>
+        
+        <p id="result">Apunta al código QR</p>
+        <div id="resultMessage"></div>
+    </div>
 
     <script>
         const video = document.getElementById('video');
         const resultText = document.getElementById('result');
         const resultMessage = document.getElementById('resultMessage');
+        const restartButton = document.getElementById('restartButton');
         const canvas = document.createElement('canvas');
         const canvasContext = canvas.getContext('2d');
 
         let scanning = false;
+        let lastScanned = '';
+        let vibrationSupported = 'vibrate' in navigator;
+        let currentStream = null;
 
-        window.addEventListener('load', async () => {
+        async function initializeCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                video.srcObject = stream;
+                // Detener stream anterior si existe
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
 
-                video.addEventListener('loadedmetadata', () => {
-                    scanning = true;
-                    scanQRCode();
+                // Limpiar mensajes de error
+                const existingError = document.querySelector('.camera-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                // Intentar obtener cualquier cámara disponible
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
                 });
-            } catch (error) {
-                alert('No se pudo acceder a la cámara: ' + error.message);
-                console.error(error);
-            }
-        });
 
+                currentStream = stream;
+                video.srcObject = stream;
+                
+                video.onloadedmetadata = () => {
+                    video.play().catch(console.error);
+                    scanning = true;
+                    resultText.textContent = 'Apunta al código QR';
+                    resultText.style.color = 'white';
+                    scanQRCode();
+                };
+            } catch (error) {
+                console.error('Error de cámara:', error);
+                showErrorMessage('Por favor, permite el acceso a la cámara y asegúrate de que no esté siendo usada por otra aplicación');
+            }
+        }
+
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'camera-error';
+            errorDiv.innerHTML = `
+                <p>${message}</p>
+                <button class="error-button" onclick="window.location.reload()">Recargar página</button>
+            `;
+            document.body.appendChild(errorDiv);
+        }
+
+        // Simplificar el manejo de errores
+        function handleError(error) {
+            console.error('Error:', error);
+            showErrorMessage('Error al acceder a la cámara. Por favor, recarga la página.');
+        }
+
+        // Resto del código de escaneo
         function scanQRCode() {
             if (!scanning) return;
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            try {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
 
-            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
-            const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
+                canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+                
+                const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
 
-            if (qrCode) {
-                scanning = false; // Pausa el escaneo
-                showResultMessage(`Escaneo exitoso scanee de nuevo`);
-                resultText.textContent = `Resultado: ${qrCode.data}`;
-                restartScan(); // Reactiva el escaneo
-            } else {
-                requestAnimationFrame(scanQRCode);
+                if (qrCode && qrCode.data !== lastScanned) {
+                    onQRCodeDetected(qrCode.data);
+                }
+            } catch (error) {
+                console.error('Error al procesar QR:', error);
             }
+
+            requestAnimationFrame(scanQRCode);
+        }
+
+        // Simplificar el evento del botón de reinicio
+        restartButton.addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        // Mantener solo las funciones esenciales
+        async function onQRCodeDetected(data) {
+            try {
+                // Validar que data no sea null o undefined
+                if (!data) {
+                    throw new Error('Código QR inválido o vacío');
+                }
+
+                console.log('QR detectado, contenido:', data);
+                
+                // Extraer el ID del empleado del QR
+                let employeeId;
+                try {
+                    const idMatch = data.match(/employee_id:(\d+)/);
+                    if (!idMatch) {
+                        throw new Error('Formato de QR inválido');
+                    }
+                    employeeId = parseInt(idMatch[1]);
+                    
+                    if (isNaN(employeeId) || employeeId <= 0) {
+                        throw new Error('ID de empleado inválido');
+                    }
+                } catch (error) {
+                    throw new Error('Formato de QR inválido. No se pudo extraer el ID del empleado.');
+                }
+
+            lastScanned = data;
+                scanning = false;
+
+                console.log('ID de empleado extraído:', employeeId);
+
+                const apiUrl = 'https://devmace.onrender.com/api/securityBooth/register';
+                
+                console.log('Enviando petición al servidor...');
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        id_employee: employeeId
+                    })
+                });
+
+                // Obtener el texto de la respuesta primero
+                const responseText = await response.text();
+                console.log('Respuesta del servidor (texto):', responseText);
+
+                // Intentar parsear la respuesta como JSON
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Error al parsear JSON:', e);
+                    throw new Error('Error al procesar la respuesta del servidor');
+                }
+
+                // Si hay un error en la respuesta
+                if (!response.ok) {
+                    console.error('Error del servidor:', result);
+                    throw new Error(result.error || result.message || 'Error en el servidor');
+                }
+
+                // Efectos de éxito
+            if (vibrationSupported) {
+                navigator.vibrate([100, 50, 100]);
+            }
+            playBeepSound();
+
+                // Mostrar mensaje de éxito
+                const mensaje = result.mensaje || 'Registro exitoso';
+                showResultMessage(mensaje);
+                resultText.textContent = mensaje;
+            resultText.style.color = '#4CAF50';
+
+            } catch (error) {
+                console.error('Error completo:', error);
+                const errorMessage = error.message || 'Error desconocido';
+                showResultMessage(errorMessage);
+                resultText.textContent = errorMessage;
+                resultText.style.color = '#f44336';
+            } finally {
+            // Reiniciar el escaneo después de 3 segundos
+            setTimeout(() => {
+                scanning = true;
+                    lastScanned = '';
+                    resultText.textContent = 'Apunta al código QR';
+                    resultText.style.color = 'white';
+                scanQRCode();
+            }, 3000);
+            }
+        }
+
+        function playBeepSound() {
+            const ding = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAAATGF2YzU4LjU0AAAAAAAAAAAAAAAAJAAAAAAAAAAAAYbUxJfmAAAAAAAAAAAAAAAAAAAA//tQxAAAAAAGkAAAAAAAAA0gAAAAABYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY=");
+            ding.volume = 0.3; // 30% del volumen máximo
+            ding.play().catch(e => console.error('Error al reproducir sonido:', e));
         }
 
         function showResultMessage(message) {
             resultMessage.textContent = message;
             resultMessage.style.display = 'block';
+            
+            // Determinar el color basado en el contenido del mensaje
+            let backgroundColor;
+            if (message.includes('Tarde')) {
+                backgroundColor = '#FFA726';
+            } else if (message.includes('anticipada')) {
+                backgroundColor = '#FF7043';
+            } else if (message.includes('Error')) {
+                backgroundColor = '#f44336';
+            } else {
+                backgroundColor = '#4CAF50';
+            }
+            
+            resultMessage.style.background = backgroundColor;
+            resultMessage.style.boxShadow = 0 4px 12px ${backgroundColor}33;
 
-            // Oculta el mensaje después de 3 segundos
             setTimeout(() => {
                 resultMessage.style.display = 'none';
             }, 3000);
         }
 
-        function restartScan() {
-            setTimeout(() => {
-                scanning = true;
-                scanQRCode();
-            }, 1000);
-        }
+        // Iniciar la aplicación
+        window.addEventListener('load', initializeCamera);
     </script>
 </body>
 </html>

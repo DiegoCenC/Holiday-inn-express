@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Portafolio-Diego cen</title>
 
     <!--Estilos-->
@@ -64,37 +64,37 @@
                 <div class="top-bar2">
                   <input type="text" id="search" placeholder="Buscar empleado">
                   <button id="buscar" onclick="searchEmployees()">Buscar</button>
-                  <button class="filter" id="openFilterModal">
+                  <button id="filterButton" class="filter">
                     <img src="assets/img/filter.svg" alt="Filtrar" class="icon">
-                </button>
+                  </button>
+                  <div id="filterDropdown" class="filter-dropdown hidden-filter">
+                    <div class="filter-dropdown-menu">
+                      <h3>Filtrar Empleados</h3>
+                  
+                      <label for="departmentFilter" class="filter-dropdown-label">Departamento:</label>
+                      <select id="departmentFilter" class="filter-dropdown-select">
+                        <option value="">Todos</option>
+                        <option value="ventas">Ventas</option>
+                        <option value="rh">Recursos Humanos</option>
+                        <option value="it">Tecnología</option>
+                      </select>
+                  
+                      <label for="statusFilter" class="filter-dropdown-label">Estado:</label>
+                      <select id="statusFilter" class="filter-dropdown-select">
+                        <option value="">Todos</option>
+                        <option value="activo">Activo</option>
+                        <option value="baja">Baja</option>
+                      </select>
+                  
+                      <button id="applyFilters" class="apply-filter-btn">Aplicar Filtros</button>
+                    </div>
+                  </div>
+                  
                 </div>
                 
               
               <!-- Modal de Filtros -->
-              <div id="filterModal" class="modal">
-                  <div class="modal-content">
-                      <span class="close" onclick="closeFilterModal()">&times;</span>
-                      <h2>Filtrar Empleados</h2>
-              
-                      <label for="filterStatus">Estado:</label>
-                      <select id="filterStatus">
-                          <option value="">Todos</option>
-                          <option value="activo">Activo</option>
-                          <option value="baja">Baja</option>
-                      </select>
-              
-                      <label for="filterDepartment">Departamento:</label>
-                      <select id="filterDepartment">
-                          <option value="">Todos</option>
-                          <option value="Alimentos y bebidas">Alimentos y bebidas</option>
-                          <option value="Ana de llaves">Ana de llaves</option>
-                          <option value="Mantenimiento">Mantenimiento</option>
-                      </select>
-              
-                      <button class="apply-filters" onclick="applyFilterModal()">Aplicar Filtros</button>
-                  </div>
-              </div>
-
+        
               <!-- Modal para visualizar el QR y habilitar/deshabilitar -->
 <div id="qrModalContainer" class="qr-modal">
   <div class="qr-modal-content">
@@ -113,35 +113,67 @@
   </div>
 </div>
 
-                <div id="createEmployeeModal" class="modal">
-                  <div class="modal-content">
-                    <span class="close" onclick="document.getElementById('createEmployeeModal').style.display='none'">&times;</span>
-                    <h2>Empleado / <span style="color: #007bff; font-weight: bold;">Agregar</span></h2>
-                    <div class="form-header">
-                      <label>Inquilino no. 00011</label>
-                      <button class="btn-cancel">Cancelar</button>
-                      <button class="btn-save">Guardar</button>
-                    </div>
-                    <form id="createEmployeeForm">
-                      <div class="form-group">
-                        <select id="createArea" required>
-                          <option value="">Área</option>
-                          <option value="admin">Administración</option>
-                          <option value="ventas">Ventas</option>
-                        </select>
-                        <input type="text" id="createEmployeeName" placeholder="Nombre" required>
-                        <input type="text" id="createLastName" placeholder="Apellido Paterno" required>
-                        <input type="text" id="createSecondLastName" placeholder="Apellido Materno">
-                      </div>
-                      <h3>Datos de contacto</h3>
-                      <div class="form-group">
-                        <input type="text" id="createPhoneNumber" placeholder="Teléfono" required>
-                        <input type="text" id="createPhoneNumber2" placeholder="Teléfono 2 (opcional)">
-                        <input type="email" id="createEmail" placeholder="Email" required>
-                      </div>
-                    </form>
-                  </div>
-                </div>
+<div id="createEmployeeModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('createEmployeeModal').style.display='none'">&times;</span>
+    <h2>Empleado / <span style="color: #007bff; font-weight: bold;">Agregar</span></h2>
+    <div class="form-header">
+      <label>ID de Empleado</label>
+      <input type="number" id="createEmployeeId" placeholder="Ej: 1034" required>
+    </div>
+    
+    <h3>Datos Personales</h3>
+    <div class="form-group">
+      <input type="text" id="createEmployeeName" placeholder="Nombre Completo" required>
+      <input type="email" id="createEmail" placeholder="Correo Electrónico" required>
+      <input type="text" id="createPhoneNumber" placeholder="Teléfono" required>
+      <input type="text" id="createAddress" placeholder="Dirección" required>
+    </div>
+
+    <h3>Departamento</h3>
+    <div class="form-group">
+      <select id="createDepartment" required>
+        <option value="">Selecciona un departamento</option>
+        <option value="Ventas">Ventas</option>
+        <option value="Recursos Humanos">Recursos Humanos</option>
+        <option value="IT">Tecnología</option>
+      </select>
+    </div>
+
+    <h3>Horarios</h3>
+    <div class="form-group">
+      <label for="createHorarioEntrada">Hora Entrada:</label>
+      <input type="time" id="createHorarioEntrada" required>
+      
+      <label for="createHorarioSalida">Hora Salida:</label>
+      <input type="time" id="createHorarioSalida" required>
+    </div>
+
+    <h3>Tolerancia</h3>
+    <div class="form-group">
+      <label for="createToleranciaEntrada">Tolerancia Entrada (min):</label>
+      <input type="number" id="createToleranciaEntrada" placeholder="Ej: 15" required>
+
+      <label for="createToleranciaSalida">Tolerancia Salida (min):</label>
+      <input type="number" id="createToleranciaSalida" placeholder="Ej: 15" required>
+    </div>
+
+    <h3>Días Laborales</h3>
+    <div class="form-group">
+      <label><input type="checkbox" name="diasLaborales" value="Lunes"> Lunes</label>
+      <label><input type="checkbox" name="diasLaborales" value="Martes"> Martes</label>
+      <label><input type="checkbox" name="diasLaborales" value="Miércoles"> Miércoles</label>
+      <label><input type="checkbox" name="diasLaborales" value="Jueves"> Jueves</label>
+      <label><input type="checkbox" name="diasLaborales" value="Viernes"> Viernes</label>
+    </div>
+
+    <div class="form-footer">
+      <button class="btn-cancel">Cancelar</button>
+      <button class="btn-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
                 <div id="updateEmployeeModal" class="modal">
                   <div class="modal-content">
                     <span class="close" onclick="document.getElementById('updateEmployeeModal').style.display='none'">&times;</span>
@@ -191,8 +223,8 @@
                 <table id="employeeTable">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Nombre</th>
+                      <th>No. de empleado</th>
                       <th>Departamento</th>
                       <th>Estatus</th>
                       <th>Acciones</th>
