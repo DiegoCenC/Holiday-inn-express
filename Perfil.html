@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Empleado</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 25px;
+            border-bottom: 2px solid rgba(0, 123, 255, 0.2);
+            position: relative;
+        }
+        
+        .profile-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: #007bff;
+        }
+        
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #007bff;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
+        }
+        
+        .profile-info {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-group {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 123, 255, 0.1);
+        }
+
+        .info-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+            border-color: rgba(0, 123, 255, 0.3);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            color: #2c3e50;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+        
+        h1 {
+            color: #007bff;
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .profile-container {
+                padding: 20px;
+            }
+            
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <img id="profileImage" src="assets/img/logo.svg" alt="Foto de perfil" class="profile-image">
+            <h1 id="employeeName">Cargando...</h1>
+        </div>
+        
+        <div class="profile-info">
+            <div class="info-group">
+                <div class="info-label">ID de Empleado</div>
+                <div id="employeeId" class="info-value">Cargando...</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Correo Electrónico</div>
+                <div id="email" class="info-value">Cargando...</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Departamento</div>
+                <div id="department" class="info-value">Cargando...</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Rol</div>
+                <div id="role" class="info-value">Cargando...</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Último Check-In</div>
+                <div id="lastCheckIn" class="info-value">Cargando...</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Último Check-Out</div>
+                <div id="lastCheckOut" class="info-value">Cargando...</div>
+            </div>
+        </div>
+        <a href="menu.html" class="back-button">Regresar al Dashboard</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const token = localStorage.getItem("authToken"); // Obtiene el token de sesión almacenado
+    
+            if (!token) {
+                alert("No se encontró un token de sesión. Inicia sesión nuevamente.");
+                window.location.href = "/login.html"; // Redirige a la página de login si no hay token
+                return;
+            }
+    
+            fetch("https://devmace.onrender.com/api/employees/profile", {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("employeeName").textContent = data.employeeName || "Desconocido";
+                document.getElementById("employeeId").textContent = data.id_employee || "N/A";
+                document.getElementById("email").textContent = data.email || "N/A";
+                document.getElementById("department").textContent = data.department || "N/A";
+                document.getElementById("role").textContent = data.role || "N/A";
+                document.getElementById("lastCheckIn").textContent = data.lastCheckIn || "SIN REGISTRO";
+                document.getElementById("lastCheckOut").textContent = data.lastCheckOut || "SIN REGISTRO";
+            })
+            .catch(error => {
+                console.error("Error al obtener los datos del perfil:", error);
+                alert("Hubo un error al cargar el perfil. Intenta de nuevo.");
+            });
+        });
+    </script>
+    
+</body>
+</html>
