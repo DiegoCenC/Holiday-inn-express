@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Anuncio</title>
+    <link rel="stylesheet" href="style-verAnuncio.css">
+    <link rel="icon" type="image/png" href="../icons-global/icon_logo.png">
+</head>
+<body>
+    <div class="header">
+        <h2><b>Reportes / Ver</b></h2>
+        <div class="actions">
+          <button class="back" onclick="window.location.href='../home.html'"><img src="../icons-global/back.svg"></button>
+          <button class="edit" onclick="window.location.href='../editarAnuncio/editarAnuncio.html'">Editar</button>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Título</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/text.svg" alt="Title Icon" class="form-section_icon">
+            <p id="adTitle" class="form-section_textStatic">Cargando título...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Programado para</label>
+        <div class="form-section_date-inputs">
+            <div class="date-inputs_wrapper">
+                <img src="../icons-global/calendar.svg" alt="Start Date Icon" class="form-section_icon">
+                <p id="adIssueDate" class="form-Section_textStatic">Cargando fechas...</p>
+            </div>
+            <div class="date-inputs_wrapper">
+                <img src="../icons-global/calendar.svg" alt="Finish Date Icon" class="form-section_icon">
+                <p id="adExpirationDate" class="form-Section_textStatic">Cargando fechas...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Descripción</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/ttext.svg" alt="Icon Description" class="form-section_icon">
+            <p id="adDescription" class="form-section_textStatic">Cargando descripción...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Departamento</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/department.svg" alt="Department Icon" class="form-section_icon">
+            <p id="adDepartment" class="form-section_textStatic">Cargando departamentos...</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Estado</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/status.svg" alt="Status Icon" class="form-section_icon">
+            <p id="adStatus" class="form-section_textStatic">Cargando estado...</p>
+        </div>
+    </div>
+
+    <script src="script-verAnuncio.js"></script>
+</body>
+</html>

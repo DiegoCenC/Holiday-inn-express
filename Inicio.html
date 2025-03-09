@@ -61,49 +61,201 @@
               
                       <div class="progress-container">
                         <div class="progress-labels">
-                            <span><h3 style="font-size: 20px; color: #1F4B79;">Entradas</h3></span>
+                            <span><h3 style="font-size: 20px; color: #1F4B79;">Asistencia General</h3></span>
                             <span>
-                                <span style="color: #28a745; font-size: 18px;">135 realizados</span> 
-                                <span style="color: red; font-size: 18px; margin-left: 16px;">12 Faltantes</span>
+                                <span id="totalPresentes" style="color: #28a745; font-size: 18px;">0 presentes</span> 
+                                <span id="totalAusentes" style="color: red; font-size: 18px; margin-left: 16px;">0 ausentes</span>
                             </span>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill">
-                                <span class="progress-text">89%</span>
+                            <div id="progressBarGeneral" class="progress-fill">
+                                <span id="porcentajeGeneral" class="progress-text">0%</span>
                             </div>
                         </div>
                     </div>
             
                     <div class="circles-container">
-                        <!-- ALL -->
+                        <!-- Administración -->
                         <div class="circle">
                             <svg width="120" height="120">
                                 <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
-                                <circle class="progress-circle" data-percentage="25" cx="60" cy="60" r="50" stroke="black" stroke-width="10" fill="none"/>
+                                <circle id="circleAdmin" class="progress-circle" cx="60" cy="60" r="50" stroke="#1F4B79" stroke-width="10" fill="none"/>
                             </svg>
-                            <div class="circle-text"><h1>0%</h1></div>
-                            <div class="circle-label">ALL</div>
+                            <div id="porcentajeAdmin" class="circle-text">0%</div>
+                            <div class="circle-label">Administración</div>
+                            <div class="circle-details">
+                                <span id="presentesAdmin" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesAdmin" style="color: red">0 ausentes</span>
+                            </div>
                         </div>
             
                         <!-- Mantenimiento -->
                         <div class="circle">
                             <svg width="120" height="120">
                                 <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
-                                <circle class="progress-circle" data-percentage="100" cx="60" cy="60" r="50" stroke="green" stroke-width="10" fill="none"/>
+                                <circle id="circleMant" class="progress-circle" cx="60" cy="60" r="50" stroke="#28a745" stroke-width="10" fill="none"/>
                             </svg>
-                            <div class="circle-text">0%</div>
+                            <div id="porcentajeMant" class="circle-text">0%</div>
                             <div class="circle-label">Mantenimiento</div>
+                            <div class="circle-details">
+                                <span id="presentesMant" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesMant" style="color: red">0 ausentes</span>
+                            </div>
                         </div>
             
                         <!-- Recepción -->
                         <div class="circle">
                             <svg width="120" height="120">
                                 <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
-                                <circle class="progress-circle" data-percentage="75" cx="60" cy="60" r="50" stroke="goldenrod" stroke-width="10" fill="none"/>
+                                <circle id="circleRecep" class="progress-circle" cx="60" cy="60" r="50" stroke="#FFA500" stroke-width="10" fill="none"/>
                             </svg>
-                            <div class="circle-text">0%</div>
+                            <div id="porcentajeRecep" class="circle-text">0%</div>
                             <div class="circle-label">Recepción</div>
+                            <div class="circle-details">
+                                <span id="presentesRecep" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesRecep" style="color: red">0 ausentes</span>
+                            </div>
                         </div>
+
+                        <!-- Recursos Humanos -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle id="circleRH" class="progress-circle" cx="60" cy="60" r="50" stroke="#9C27B0" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div id="porcentajeRH" class="circle-text">0%</div>
+                            <div class="circle-label">Recursos Humanos</div>
+                            <div class="circle-details">
+                                <span id="presentesRH" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesRH" style="color: red">0 ausentes</span>
+                            </div>
+                        </div>
+
+                        <!-- Sistemas -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle id="circleSistemas" class="progress-circle" cx="60" cy="60" r="50" stroke="#2196F3" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div id="porcentajeSistemas" class="circle-text">0%</div>
+                            <div class="circle-label">Sistemas</div>
+                            <div class="circle-details">
+                                <span id="presentesSistemas" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesSistemas" style="color: red">0 ausentes</span>
+                            </div>
+                        </div>
+
+                        <!-- Contabilidad -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle id="circleContabilidad" class="progress-circle" cx="60" cy="60" r="50" stroke="#FF5722" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div id="porcentajeContabilidad" class="circle-text">0%</div>
+                            <div class="circle-label">Contabilidad</div>
+                            <div class="circle-details">
+                                <span id="presentesContabilidad" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesContabilidad" style="color: red">0 ausentes</span>
+                            </div>
+                        </div>
+
+                        <!-- Ventas -->
+                        <div class="circle">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" stroke="#ddd" stroke-width="10" fill="none"/>
+                                <circle id="circleVentas" class="progress-circle" cx="60" cy="60" r="50" stroke="#4CAF50" stroke-width="10" fill="none"/>
+                            </svg>
+                            <div id="porcentajeVentas" class="circle-text">0%</div>
+                            <div class="circle-label">Ventas</div>
+                            <div class="circle-details">
+                                <span id="presentesVentas" style="color: #28a745">0 presentes</span>
+                                <span id="ausentesVentas" style="color: red">0 ausentes</span>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', async function() {
+                                let token = localStorage.getItem('authToken');
+                                
+                                if (!token) {
+                                    token = await getAuthToken();
+                                    if (!token) {
+                                        console.error('No se pudo obtener el token de autenticación');
+                                        return;
+                                    }
+                                }
+
+                                async function actualizarGraficas() {
+                                    try {
+                                        const response = await fetch('https://devmace.onrender.com/api/securityBooth/attendance/summary', {
+                                            method: 'GET',
+                                            headers: {
+                                                'Authorization': `Bearer ${token}`,
+                                                'Content-Type': 'application/json'
+                                            }
+                                        });
+
+                                        if (!response.ok) {
+                                            if (response.status === 401) {
+                                                token = await getAuthToken();
+                                                if (!token) throw new Error('Error de autenticación');
+                                                return actualizarGraficas();
+                                            }
+                                            throw new Error(`HTTP error! status: ${response.status}`);
+                                        }
+
+                                        const data = await response.json();
+                                        console.log('Datos recibidos:', data);
+
+                                        // Actualizar estadísticas generales
+                                        const totalEmpleados = data.totalEmployees || 0;
+                                        const totalPresentes = data.totalPresent || 0;
+                                        const porcentajeGeneral = ((totalPresentes / totalEmpleados) * 100).toFixed(1);
+                                        
+                                        document.getElementById('totalPresentes').textContent = `${totalPresentes} presentes`;
+                                        document.getElementById('totalAusentes').textContent = `${totalEmpleados - totalPresentes} ausentes`;
+                                        document.getElementById('porcentajeGeneral').textContent = `${porcentajeGeneral}%`;
+                                        document.getElementById('progressBarGeneral').style.width = `${porcentajeGeneral}%`;
+
+                                        // Actualizar cada departamento
+                                        const departamentos = {
+                                            'Admin': 'admin',
+                                            'Mant': 'mant',
+                                            'Recep': 'recep',
+                                            'RH': 'rh',
+                                            'Sistemas': 'sistemas',
+                                            'Contabilidad': 'contabilidad',
+                                            'Ventas': 'ventas'
+                                        };
+                                        
+                                        Object.entries(departamentos).forEach(([depto, apiKey]) => {
+                                            const stats = data.departmentStats?.[apiKey];
+                                            if (stats) {
+                                                const porcentaje = ((stats.present / stats.total) * 100).toFixed(1);
+                                                const circle = document.getElementById(`circle${depto}`);
+                                                const circumference = 2 * Math.PI * 50;
+                                                const offset = circumference - (porcentaje / 100 * circumference);
+                                                
+                                                circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                                                circle.style.strokeDashoffset = offset;
+                                                
+                                                document.getElementById(`porcentaje${depto}`).textContent = `${porcentaje}%`;
+                                                document.getElementById(`presentes${depto}`).textContent = `${stats.present} presentes`;
+                                                document.getElementById(`ausentes${depto}`).textContent = `${stats.total - stats.present} ausentes`;
+                                            }
+                                        });
+                                    } catch (error) {
+                                        console.error('Error al actualizar las gráficas:', error);
+                                    }
+                                }
+
+                                // Primera actualización
+                                await actualizarGraficas();
+
+                                // Actualizar cada 5 minutos
+                                setInterval(actualizarGraficas, 300000);
+                            });
+                        </script>
                     </div>
                   </div>
             

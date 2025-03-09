@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/stylesA.css">
+    <link rel="stylesheet" href="assets/css/styles-home.css">
 </head>
 <body>
     <div class="container">
@@ -56,106 +57,73 @@
                   </div>
                 </header>
             <div class="contenedor2">
-                  <!-- la cabezera del título "Reportes" y el botón para crear un nuevo anuncio -->
-  <div class="header">
-    <h2><b>Reportes</b></h2>
-    <button class="create-new" onclick="window.location.href='crearNuevo/crearNuevoAnuncio.html'">Crear nuevo</button>
-  </div>
-  <!-- termina la cabecera -->
-
-  <!-- aquí está el div de la barra de búsqueda, donde está el botón de buscar, el filtro y el input --> 
-  <div class="search-bar">
-    <div class="search-input-wrapper">
-      <img src="src/search.svg" alt="Buscar" class="icon">
-      <input type="text" placeholder="Buscar reporte">
-    </div>
-    <button class="search">Buscar</button>
-    <button class="filter"><img src="assets/img/filter.svg" alt="Filtrar" class="icon"></button>
-  </div>
-  <!-- termina div -->
-
-  <!-- puse contenido para poder ver como se ven al final -->
-  <!-- esto sólo me servirá para probarlo antes de usar la api como tal -->
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>No. de anuncio</th>
-          <th>Título</th>
-          <th>Fecha de creación</th>
-          <th>Descripción</th>
-          <th>Estatus</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>00001</td>
-          <td>No habrá agua</td>
-          <td>20 / Sep / 2023</td>
-          <td>SN</td>
-          <td>Activo</td>
-          <td>
-            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
-            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
-        </td>
-        </tr>
-        <tr>
-        <td>00002</td>
-            <td>Ya hay fibra</td>
-            <td>1 / Oct / 2023</td>
-            <td>SN</td>
-            <td>Inactivo</td>
-            <td>
-              <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
-              <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
-            </td>
-        </tr>
-        <tr>
-          <td>00003</td>
-          <td>Ya hay vigilancia</td>
-          <td>6 / Nov / 2023</td>
-          <td>SN</td>
-          <td>Activo</td>
-          <td>
-            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
-            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
-        </td>
-        </tr>
-        <tr>
-          <td>00004</td>
-          <td>Nada nuevo</td>
-          <td>6 / Nov / 2023</td>
-          <td>SN</td>
-          <td>Activo</td>
-          <td>
-            <button class="view" onclick="window.location.href='verAnuncio/verAnuncio.html'"><img src="assets/img/eye.svg" alt="Ver" class="icon"></button>
-            <button class="delete"><img src="assets/img/trash.svg" alt="Eliminar" class="icon"></button>
-        </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <!-- aquí termina el contenido -->
-
-  <!-- aquí está el "modal" para el botón de "eliminar", o la ventana emergente -->
-  <div class="modal" id="deleteModal">
-    <div class="modal-content">
-      <h3>Eliminar</h3>
-      <br>
-      <p>¿Eliminar elemento?</p>
-      <br>
-      <div class="modal-buttons">
-        <button class="cancel-button">Cancelar</button>
-        <button class="delete-confirm-button">Eliminar</button>
-      </div>
-    </div>
-  </div>
+              <div class="header">
+                <h2><b>Reportes</b></h2>
+                <button class="create-new" onclick="window.location.href='/crearAnuncio/crearAnuncio.html'">Crear nuevo</button>
+            </div>
+            
+            <!-- barra de búsqueda -->
+            <div class="search-bar">
+                <button class="search-bar_filter"><img src="assets/img/filter.svg" alt="Filtro" class="search-bar_icon"></button> 
+            </div>
+            <!-- barra de búsqueda -->
+        
+            <!-- columnas -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                      <tr>
+                        <th data-column="id_advertisements" data-order="desc">No. Anuncio <span class="sort-arrow">⬆⬇</span></th>
+                        <th data-column="title" data-order="desc">Título <span class="sort-arrow">⬆⬇</span></th>
+                        <th data-column="issue_date" data-order="desc">Fecha creación <span class="sort-arrow">⬆⬇</span></th>
+                        <th data-column="description" data-order="desc">Descripción <span class="sort-arrow">⬆⬇</span></th>
+                        <th data-column="status" data-order="desc">Estado <span class="sort-arrow">⬆⬇</span></th>
+                        <th data-column="departments" data-order="desc">Departamento <span class="sort-arrow">⬆⬇</span></th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+            </div>
+            <!-- columnas -->
+        
+        
+            <!-- paginación -->
+            <div class="pagination">
+                <button id="prevPage" disabled>&laquo; Anterior</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage" disabled>Siguiente &raquo;</button>
+            </div>
+            <!-- paginación -->
+            
+            <!-- modal -->
+            <div class="modal" id="deleteModal">
+                <div class="modal-content">
+                    <h3>Eliminar</h3>
+                    <p>¿Eliminar elemento?</p>
+                    <br>
+                    <div class="modal-buttons">
+                        <button class="modal-buttons_cancel">Cancelar</button>
+                        <button class="modal-buttons_delete">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="filterAlertModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <p>Seleccione un valor para el filtro.</p>
+                    <br>
+                    <div class="modal-buttons">
+                        <button id="closeFilterAlertModal">Aceptar</button>
+                    </div>
+                </div>
+            </div>
             </div>
             
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="/assets/js/script-home.js"></script>
   </body>
   
 </html>

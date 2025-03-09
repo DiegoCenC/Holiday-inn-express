@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Anuncio</title>
+    <link rel="stylesheet" href="style-editarAnuncio.css">
+    <link rel="icon" type="image/png" href="../icons-global/icon_logo.png">
+</head>
+<body>
+    <div class="header">
+        <h2><b>Reportes / Editar</b></h2>
+        <div class="actions">
+          <a href="../home.html" class="cancel">Cancelar</a>
+          <button class="save">Guardar</button>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label for="title-report">Reporte</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/text.svg" alt="Title Icon" class="form-section_icon">
+            <input id="title-report" type="text" placeholder="Título">
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label>Programado para</label>
+        <div class="form-section_date-inputs">
+            <div class="date-inputs_wrapper">
+                <img src="../icons-global/calendar.svg" alt="Start Date Icon">
+                <input id="start-date" type="date" placeholder="Start Date">
+            </div>
+            <div class="date-inputs_wrapper">
+                <img src="../icons-global/calendar.svg" alt="Finish Date Icon">
+                <input id="end-date" type="date" placeholder="Finish Date">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label for="description-report">Descripción</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/ttext.svg" alt="Icon Description" class="form-section_icon">
+            <textarea id="description-report" placeholder="Descripción"></textarea>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label for="department">Departamento</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/department.svg" alt="Department Icon" class="form-section_icon">
+            <select id="department">
+                <option value="All" selected>Todos</option>
+                <option value="Cocina">Cocina</option>
+                <option value="Mantenimiento">Mantenimiento</option>
+                <option value="Seguridad">Seguridad</option>
+                <option value="Almacen">Almacén</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label for="status">Estado</label>
+        <div class="form-section_wrapper">
+            <img src="../icons-global/status.svg" alt="Status Icon" class="form-section_icon">
+            <select id="status" disabled>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+                <option value="programado">Programado</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="modal-ok">OK</button>
+        </div>
+    </div>
+
+    <script src="script-editarAnuncio.js"></script>
+</body>
+</html>
