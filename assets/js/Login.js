@@ -5,7 +5,6 @@ document.getElementById('login-form').addEventListener('submit', async function 
   const password = document.getElementById('password').value;
 
   if (!username || !password) {
-    alert('Por favor, complete todos los campos.');
     return;
   }
 
@@ -23,15 +22,13 @@ document.getElementById('login-form').addEventListener('submit', async function 
       localStorage.setItem('authToken', data.token);
 
       // Redireccionar al usuario
-      alert('Inicio de sesión exitoso. Redirigiendo...');
       window.location.href = 'Inicio.html'; // Cambia esto a la página principal
     } else if (response.status === 401) {
-      alert('Credenciales incorrectas. Intente de nuevo.');
+      console.log('Credenciales incorrectas');
     } else {
-      alert('Hubo un problema con el inicio de sesión. Inténtelo más tarde.');
+      console.log('Error en el inicio de sesión');
     }
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
-    alert('Error de conexión. Inténtelo más tarde.');
   }
 });

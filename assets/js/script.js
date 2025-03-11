@@ -93,7 +93,79 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
 // Obtener empleados
-async function fetchEmployees(page = 1, search = '', limit = 15) {
+async function fetchEmployees(page = 1, search = '', limit = 10) {
+  // Remover paginación anterior si existe
+  const oldPagination = document.querySelector('.pagination');
+  if (oldPagination) {
+    oldPagination.remove();
+  }
+
+  // Crear nueva paginación
+  const paginationContainer = document.createElement('div');
+  paginationContainer.className = 'pagination';
+  paginationContainer.style.cssText = `
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 25px;
+    font-family: Arial, sans-serif;
+  `;
+
+  const prevButton = document.createElement('button');
+  prevButton.textContent = '← Anterior';
+  prevButton.style.cssText = `
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0056b3;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  `;
+  prevButton.onmouseover = () => prevButton.style.backgroundColor = '#0056b3';
+  prevButton.onmouseout = () => prevButton.style.backgroundColor = '#007bff';
+  prevButton.onclick = () => {
+    if (page > 1) fetchEmployees(page - 1, search, limit);
+  };
+
+  const pageText = document.createElement('span');
+  pageText.textContent = `Página ${page}`;
+  pageText.style.cssText = `
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background-color: #f8f9fa;
+  `;
+
+  const nextButton = document.createElement('button');
+  nextButton.textContent = 'Siguiente →';
+  nextButton.style.cssText = `
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0056b3;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  `;
+  nextButton.onmouseover = () => nextButton.style.backgroundColor = '#0056b3';
+  nextButton.onmouseout = () => nextButton.style.backgroundColor = '#007bff';
+  nextButton.onclick = () => fetchEmployees(page + 1, search, limit);
+
+  paginationContainer.appendChild(prevButton);
+  paginationContainer.appendChild(pageText);
+  paginationContainer.appendChild(nextButton);
+
+  // Agregar después de la tabla
+  const table = document.getElementById('employeeTable');
+  if (table.nextSibling) {
+    table.parentNode.insertBefore(paginationContainer, table.nextSibling);
+  } else {
+    table.parentNode.appendChild(paginationContainer);
+  }
   const token = getStoredToken() || await getAuthToken();
   if (!token) return;
 
@@ -146,7 +218,7 @@ function renderEmployees(employees) {
 async function viewEmployee(id) {
   const token = getStoredToken();
   if (!token) {
-    alert("No tienes un token de autenticación válido.");
+    console.error("No tienes un token de autenticación válido.");
     return;
   }
 
@@ -189,7 +261,7 @@ async function viewEmployee(id) {
 
   } catch (error) {
     console.error('Error:', error);
-    alert('No se pudo obtener la información del empleado.');
+    console.error('No se pudo obtener la información del empleado.');
   }
   
 }
@@ -251,7 +323,10 @@ async function getAuthToken() {
 // Función para crear un nuevo empleado
 async function createEmployee() {
   const token = await getAuthToken();
-  if (!token) return alert("Error al autenticar. Intenta nuevamente.");
+  if (!token) {
+    console.error("Error al autenticar. Intenta nuevamente.");
+    return;
+  }
 
   // Obtener datos del formulario
   const employeeData = {
@@ -281,15 +356,15 @@ async function createEmployee() {
 
     const result = await response.json();
     if (response.ok) {
-      alert(result.message || "Empleado creado exitosamente.");
+      console.log(result.message || "Empleado creado exitosamente.");
       closeCreateModal();
       fetchEmployees(); // Recargar la lista de empleados
     } else {
-      alert(`Error: ${result.message || "No se pudo crear el empleado"}`);
+      console.error(`Error: ${result.message || "No se pudo crear el empleado"}`);
     }
   } catch (error) {
     console.error("Error al crear el empleado:", error);
-    alert("Ocurrió un error al crear el empleado.");
+    console.error("Ocurrió un error al crear el empleado.");
   }
 }
 
@@ -372,59 +447,7 @@ async function getAuthToken() {
   }
 }
 
-// Función para crear un nuevo empleado
-async function createEmployee() {
-  const token = await getAuthToken();
-  if (!token) return alert("Error al autenticar. Intenta nuevamente.");
-
-  // Obtener datos del formulario
-  const employeeData = {
-    id_employee: parseInt(document.getElementById('createEmployeeId').value), 
-    employeeName: document.getElementById('createEmployeeName').value,
-    email: document.getElementById('createEmail').value,
-    department: document.getElementById('createDepartment').value,
-    phoneNumber: document.getElementById('createPhoneNumber').value,
-    address: document.getElementById('createAddress').value,
-    horario_entrada: document.getElementById('createHorarioEntrada').value,
-    horario_salida: document.getElementById('createHorarioSalida').value,
-    tolerancia_entrada: parseInt(document.getElementById('createToleranciaEntrada').value),
-    tolerancia_salida: parseInt(document.getElementById('createToleranciaSalida').value),
-    dias_laborales: Array.from(document.querySelectorAll('input[name="diasLaborales"]:checked'))
-                         .map(checkbox => checkbox.value)
-  };
-
-  try {
-    const response = await fetch('https://devmace.onrender.com/api/employees', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(employeeData)
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      alert(result.message || "Empleado creado exitosamente.");
-      closeCreateModal();
-      fetchEmployees(); // Recargar la lista de empleados
-    } else {
-      alert(`Error: ${result.message || "No se pudo crear el empleado"}`);
-    }
-  } catch (error) {
-    console.error("Error al crear el empleado:", error);
-    alert("Ocurrió un error al crear el empleado.");
-  }
-}
-
-// Asociar eventos a los botones
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".btn-cancel").addEventListener("click", closeCreateModal);
-  document.querySelector(".btn-save").addEventListener("click", createEmployee);
-});
-
-
-// Eliminar empleado
+// Eliminar empleado y recargar la vista completa
 async function deleteEmployee(employeeId) {
   const token = getStoredToken() || await getAuthToken();
   if (!token) return;
@@ -438,13 +461,14 @@ async function deleteEmployee(employeeId) {
     });
 
     if (response.ok) {
-      alert('Empleado eliminado');
-      fetchEmployees();
+      console.log('Empleado eliminado exitosamente');
+      // Recargar la página completa para refrescar todos los datos
+      window.location.reload();
     } else {
-      alert('Error al eliminar empleado');
+      console.error('Error al eliminar empleado');
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error al eliminar empleado:", error);
   }
 }
 
@@ -531,51 +555,22 @@ function filterEmployees() {
 }
 
 
-// Función para obtener un solo empleado por ID
-async function fetchEmployeeById(id) {
-  const token = getStoredToken();
-  if (!token) {
-    alert("No tienes un token de autenticación válido.");
-    return;
-  }
-
-  try {
-    const response = await fetch(`${apiUrl}/${id}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Empleado no encontrado');
-    }
-
-    const employee = await response.json();
-
-    // Mostrar solo este empleado en la tabla
-    renderEmployees([employee]);
-  } catch (error) {
-    console.error('Error al buscar empleado:', error);
-    alert('No se encontró el empleado.');
-  }
-}
-
-
 
 let currentEmployeeId = null;
-let qrEnabled = false;
+let qrEnabled = false; // Estado actual del QR
 
-// Función para abrir el modal con los datos del QR del empleado
+// ✅ Función para abrir el modal y cargar el estado correcto del QR
 async function editEmployee(employeeId) {
-    currentEmployeeId = employeeId; // Guardar el ID del empleado
+    currentEmployeeId = employeeId;
 
     const token = getStoredToken();
-    if (!token) return alert("No tienes un token válido.");
+    if (!token) {
+      console.error("No tienes un token válido.");
+      return;
+    }
 
     try {
-        // Obtener datos del empleado (incluido el QR)
+        // 🔄 Obtener los datos actualizados del empleado
         const response = await fetch(`${apiUrl}/${employeeId}`, {
             method: 'GET',
             headers: {
@@ -586,41 +581,57 @@ async function editEmployee(employeeId) {
 
         if (!response.ok) throw new Error('Error al obtener datos del empleado');
 
-        const employee = await response.json();
+        const data = await response.json();
+        const employee = data.data;
 
-        // Asignar QR y estado
+        if (!employee) throw new Error('No se encontraron datos del empleado');
+
+        // 🔄 Asignar imagen del QR
         document.getElementById('qrModalImage').src = generateQrCode(employee.id_employee);
-        qrEnabled = employee.enabled ?? false; // Si no existe, por defecto es false
 
-        // Actualizar el estado del toggle
+        // 🔄 Obtener estado actual desde la API o del localStorage
+        qrEnabled = localStorage.getItem(`qrEnabled_${employeeId}`) !== null ?
+                    JSON.parse(localStorage.getItem(`qrEnabled_${employeeId}`)) :
+                    employee.enabled ?? false;
+
         document.getElementById('qrToggleSwitch').checked = qrEnabled;
 
-        // Mostrar el modal
+        // 🟢 Guardar el estado en localStorage para evitar que se sobrescriba
+        localStorage.setItem(`qrEnabled_${employeeId}`, JSON.stringify(qrEnabled));
+
+        // ✅ Mostrar el modal
         document.getElementById('qrModalContainer').style.display = 'flex';
 
     } catch (error) {
         console.error('Error al cargar el QR:', error);
+        console.error("No se pudo obtener el estado del QR.");
     }
 }
 
-// Generar el QR (cambiar si tienes un endpoint para generarlo)
+// ✅ Función para generar la imagen QR
 function generateQrCode(employeeId) {
     return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${employeeId}`;
 }
 
-// Función para cerrar el modal
+// ✅ Función para cerrar el modal
 function closeQrModal() {
     document.getElementById('qrModalContainer').style.display = 'none';
 }
 
-// Función para habilitar/deshabilitar el QR con el toggle
+// ✅ Función para habilitar/deshabilitar el QR con persistencia
 async function toggleQrState() {
-    if (!currentEmployeeId) return;
+    if (!currentEmployeeId) {
+      console.error("No se encontró un empleado para actualizar.");
+      return;
+    }
 
     const token = getStoredToken();
-    if (!token) return alert("No tienes un token válido.");
+    if (!token) {
+      console.error("No tienes un token válido.");
+      return;
+    }
 
-    // Obtener el estado actual del toggle
+    // 🔄 Obtener el estado actual del switch
     qrEnabled = document.getElementById('qrToggleSwitch').checked;
 
     try {
@@ -635,7 +646,149 @@ async function toggleQrState() {
 
         if (!response.ok) throw new Error('Error al actualizar estado del QR');
 
+        // ✅ Guardar el estado en localStorage para evitar que se sobrescriba
+        localStorage.setItem(`qrEnabled_${currentEmployeeId}`, JSON.stringify(qrEnabled));
+
+        // ✅ Verificar el estado en la API después de actualizar
+        setTimeout(async () => {
+            await verifyQrStateInAPI();
+        }, 2000); // Esperar 2 segundos antes de verificar
+
+        // 🟢 Mostrar mensaje de éxito
+        console.log(`El código QR ha sido ${qrEnabled ? "habilitado" : "deshabilitado"} correctamente.`);
+
     } catch (error) {
         console.error('Error al cambiar estado del QR:', error);
+        console.error("No se pudo actualizar el estado del QR.");
     }
 }
+
+// ✅ Función para verificar que la API realmente guardó el cambio
+async function verifyQrStateInAPI() {
+    const token = getStoredToken();
+    if (!token) return;
+
+    try {
+        const response = await fetch(`${apiUrl}/${currentEmployeeId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Error al verificar datos actualizados del empleado');
+
+        const data = await response.json();
+        const employee = data.data;
+
+        if (!employee) throw new Error('No se encontraron datos del empleado');
+
+        // 🔄 Actualizar el estado del switch con los datos más recientes de la API
+        qrEnabled = employee.enabled ?? false;
+        document.getElementById('qrToggleSwitch').checked = qrEnabled;
+
+        // ✅ Guardar en localStorage para evitar cambios inesperados
+        localStorage.setItem(`qrEnabled_${currentEmployeeId}`, JSON.stringify(qrEnabled));
+
+    } catch (error) {
+        console.error('Error al verificar estado actualizado del QR:', error);
+    }
+}
+
+
+async function viewEmployee(id) {
+  const token = getStoredToken();
+  if (!token) {
+      console.error("No tienes un token de autenticación válido.");
+      return;
+  }
+
+  try {
+      console.log(`🔍 Buscando empleado con ID: ${id}`);
+
+      const response = await fetch(`${apiUrl}/${id}`, {
+          method: 'GET',
+          headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${token}`
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error('Error al obtener los datos del empleado');
+      }
+
+      const data = await response.json();
+      console.log("📌 Respuesta de la API:", data);
+
+      if (data.success && data.data) {
+          const employee = data.data;
+
+          // Asignamos los valores al modal
+          document.getElementById('modalId').textContent = employee.id_employee || "No disponible";
+          document.getElementById('modalName').textContent = employee.employeeName || "No disponible";
+          document.getElementById('modalDepartment').textContent = employee.department || "No disponible";
+          document.getElementById('modalSubdepartment').textContent = employee.subdepartment || "No disponible";
+          document.getElementById('modalEmail').textContent = employee.email || "No disponible";
+          document.getElementById('modalPhoneNumber').textContent = employee.phoneNumber || "No disponible";
+          document.getElementById('modalAddress').textContent = employee.address || "No disponible";
+          document.getElementById('modalStatus').textContent = employee.status || "Activo";
+          document.getElementById('modalRole').textContent = employee.role || "No disponible";
+          document.getElementById('modalCreatedAt').textContent = formatDateTime(employee.created_at);
+          document.getElementById('modalUpdatedAt').textContent = formatDateTime(employee.updated_at);
+
+          // Si el empleado está en "baja", mostrar advertencia
+          if (employee.status.toLowerCase() === "baja") {
+              document.getElementById('modalStatus').style.color = "red";
+          } else {
+              document.getElementById('modalStatus').style.color = "green";
+          }
+
+          // Llamar a la función para obtener los horarios y agregarlos en la lista
+          renderEmployeeSchedules(employee.horarios);
+
+          // Mostramos el modal
+          document.getElementById('employeeModal').style.display = 'block';
+      } else {
+          console.error(`No se encontraron detalles del empleado con ID ${id}.`);
+      }
+
+  } catch (error) {
+      console.error('🚨 Error:', error);
+      console.error('No se pudo obtener la información del empleado.');
+  }
+}
+
+// Función para mostrar los horarios dentro de la misma sección del modal
+function renderEmployeeSchedules(horarios) {
+  const horariosList = document.getElementById("modalHorariosList");
+  horariosList.innerHTML = ""; // Limpiar la lista antes de agregar nuevos datos
+
+  if (horarios && horarios.length > 0) {
+      horarios.forEach(horario => {
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `<strong>${horario.fecha}:</strong> Entrada: ${horario.hora_entrada}, Salida: ${horario.hora_salida}`;
+          horariosList.appendChild(listItem);
+      });
+  } else {
+      horariosList.innerHTML = "<li>No hay horarios disponibles</li>";
+  }
+}
+
+// Función para formatear fechas en formato legible
+function formatDateTime(dateTime) {
+  if (!dateTime) return "No disponible";
+  const date = new Date(dateTime);
+  return date.toLocaleString(); // Convierte la fecha en un formato legible
+}
+
+// Función para cerrar el modal
+function closeEmployeeModal() {
+  document.getElementById('employeeModal').style.display = 'none';
+}
+
+// Asignar evento al botón de cierre del modal
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelector(".btn-cancel2").addEventListener("click", closeEmployeeModal);
+});

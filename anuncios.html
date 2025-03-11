@@ -24,7 +24,6 @@
               <ul>
                 <li><a href="Inicio.html">Inicio</a></li>
                 <li><a href="cheack.html">Check</a></li>
-                <li><a href="comedor.html">Comedor</a></li>
                 <li><a href="menu.html">Empleados</a></li>
                 <li><a href="anuncios.html">Anuncios</a></li>
               </ul>
@@ -37,7 +36,7 @@
             <!-- HTML -->
             <div class="user-info">
               <button class="user-button" id="userMenuButton">
-                Hola Iban Loeza <span class="dropdown-icon">▼</span>
+                Hola&nbsp;<span id="employeeNameHeader"></span> <span class="dropdown-icon">▼</span>
               </button>
               <div class="none"></div>
               <div class="dropdown-menu hidden" id="userDropdown">
@@ -124,6 +123,38 @@
         </div>
     </div>
     <script src="/assets/js/script-home.js"></script>
+    <script>
+      // Función para cargar el nombre del empleado
+      function loadEmployeeName() {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          fetch("https://devmace.onrender.com/api/employees/profile", {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Accept": "application/json"
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Actualizar todos los elementos con el ID employeeNameHeader
+            const nameElements = document.querySelectorAll("#employeeNameHeader");
+            nameElements.forEach(element => {
+              element.textContent = data.employeeName || "Usuario";
+            });
+          })
+          .catch(error => {
+            console.error("Error al obtener nombre:", error);
+            const nameElements = document.querySelectorAll("#employeeNameHeader");
+            nameElements.forEach(element => {
+              element.textContent = "Usuario";
+            });
+          });
+        }
+      }
+
+      // Cargar el nombre cuando el DOM esté listo
+      document.addEventListener("DOMContentLoaded", loadEmployeeName);
+    </script>
   </body>
   
 </html>

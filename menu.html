@@ -22,7 +22,6 @@
               <ul>
                 <li><a href="Inicio.html">Inicio</a></li>
                 <li><a href="cheack.html">Check</a></li>
-                <li><a href="comedor.html">Comedor</a></li>
                 <li><a href="menu.html">Empleados</a></li>
                 <li><a href="anuncios.html">Anuncios</a></li>
               </ul>
@@ -35,7 +34,7 @@
             <!-- HTML -->
             <div class="user-info">
               <button class="user-button" id="userMenuButton">
-                Hola Iban Loeza <span class="dropdown-icon">▼</span>
+                Hola&nbsp;<span id="employeeNameHeader"></span> <span class="dropdown-icon">▼</span>
               </button>
               <div class="none"></div>
               <div class="dropdown-menu hidden" id="userDropdown">
@@ -206,20 +205,33 @@
 
                 <div id="employeeModal" class="modal">
                   <div class="modal-content2">
-                  
-                    <div class="form-header2">
-                      <button class="btn-cancel2">Cancelar</button>
-                      <h2>Detalles del Empleado</h2>
-                    </div>
-                    
-                    <p><strong>ID:</strong> <span id="modalId"></span></p>
-                    <p><strong>Nombre:</strong> <span id="modalName"></span></p>
-                    <p><strong>Departamento:</strong> <span id="modalDepartment"></span></p>
-                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
-                    <p><strong>Dirección:</strong> <span id="modalAddress"></span></p>
-                    <p><strong>Estado:</strong> <span id="modalStatus"></span></p>
+                      <div class="form-header2">
+                          <button class="btn-cancel2">Cancelar</button>
+                          <h2>Detalles del Empleado</h2>
+                      </div>
+              
+                      <p><strong>ID:</strong> <span id="modalId"></span></p>
+                      <p><strong>Nombre:</strong> <span id="modalName"></span></p>
+                      <p><strong>Departamento:</strong> <span id="modalDepartment"></span></p>
+                      <p><strong>Subdepartamento:</strong> <span id="modalSubdepartment"></span></p>
+                      <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                      <p><strong>Teléfono:</strong> <span id="modalPhoneNumber"></span></p>
+                      <p><strong>Dirección:</strong> <span id="modalAddress"></span></p>
+                      <p><strong>Estado:</strong> <span id="modalStatus"></span></p>
+                      <p><strong>Rol:</strong> <span id="modalRole"></span></p>
+                      <p><strong>Creado en:</strong> <span id="modalCreatedAt"></span></p>
+                      <p><strong>Actualizado en:</strong> <span id="modalUpdatedAt"></span></p>
+              
+                      <!-- Sección de Horarios -->
+                      <h3>Horarios</h3>
+                      <div id="modalHorariosContainer">
+                          <ul id="modalHorariosList">
+                              <!-- Los horarios se llenarán dinámicamente aquí -->
+                          </ul>
+                      </div>
                   </div>
-                </div>
+              </div>
+              
                 
                 <table id="employeeTable">
                   <thead>
@@ -240,6 +252,38 @@
         </div>
     </div>
     <script src="assets/js/script.js"></script>
+    <script>
+      // Función para cargar el nombre del empleado
+      function loadEmployeeName() {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          fetch("https://devmace.onrender.com/api/employees/profile", {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Accept": "application/json"
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Actualizar todos los elementos con el ID employeeNameHeader
+            const nameElements = document.querySelectorAll("#employeeNameHeader");
+            nameElements.forEach(element => {
+              element.textContent = data.employeeName || "Usuario";
+            });
+          })
+          .catch(error => {
+            console.error("Error al obtener nombre:", error);
+            const nameElements = document.querySelectorAll("#employeeNameHeader");
+            nameElements.forEach(element => {
+              element.textContent = "Usuario";
+            });
+          });
+        }
+      }
+
+      // Cargar el nombre cuando el DOM esté listo
+      document.addEventListener("DOMContentLoaded", loadEmployeeName);
+    </script>
   </body>
   
 </html>

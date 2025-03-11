@@ -101,6 +101,11 @@ async function loadAttendanceData() {
           ${record.ultima_salida || "No registrado"}
         </td>
         <td>${new Date().toISOString().split('T')[0]}</td>
+        <td class="actions" style="display: flex;">
+          <button class="action-btn" onclick="viewEmployee(${record.id_employee})">
+            <img src="assets/img/eye.svg" alt="Ver">
+          </button>
+        </td>
       `;
       tbody.appendChild(row);
     });
@@ -223,3 +228,86 @@ function applyAdvancedFilters() {
 
 
 
+const apiUrl = "https://devmace.onrender.com/api/employees";
+const attendanceUrl = "https://devmace.onrender.com/api/securityBooth/attendance/daily";
+let currentEmployeeId = null;
+
+// ✅ Función para abrir el modal y mostrar los detalles del empleado
+async function viewEmployee(id) {
+    currentEmployeeId = id;
+
+    const token = getStoredToken();
+    if (!token) {
+        alert("No tienes un token de autenticación válido.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al obtener los datos del empleado");
+        }
+
+        const data = await response.json();
+        if (data.success && data.data) {
+            const employee = data.data;
+
+            document.getElementById("modalId").textContent = employee.id_employee || "No disponible";
+            document.getElementById("modalName").textContent = employee.employeeName || "No disponible";
+            document.getElementById("modalDepartment").textContent = employee.department || "No disponible";
+            document.getElementById("modalEmail").textContent = employee.email || "No disponible";
+            document.getElementById("modalAddress").textContent = employee.address || "No disponible";
+            document.getElementById("modalStatus").textContent = employee.status || "Activo";
+
+            // ✅ Limpiar y cargar asistencia
+            document.getElementById("attendanceTable").querySelector("tbody").innerHTML = "";
+            fetchEmployeeAttendance();
+
+            document.getElementById("employeeModal").style.display = "block";
+        } else {
+            alert("No se encontraron detalles del empleado.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("No se pudo obtener la información del empleado.");
+    }
+}
+
+// ✅ Función para obtener asistencia con filtros
+async function fetchEmployeeAttendance() {
+    const token = getStoredToken();
+    if (!token || !currentEmployeeId) return;
+
+    const date = document.getElementById("attendanceDate").value || new Date().toISOString().split("T")[0];
+    const type = document.getElementById("attendanceType").value;
+
+    const url = `${attendanceUrl}/${currentEmployeeId}/${date}?type=${type}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+        const tbody = document.querySelector("#attendanceTable tbody");
+        tbody.innerHTML = data.success && data.data.length > 0
+            ? data.data.map(record => `<tr><td>${record.hora || "No disponible"}</td><td>${record.tipo}</td><td>${record.justificacion || "N/A"}</td></tr>`).join("")
+            : `<tr><td colspan="3" class="no-data">Sin registros</td></tr>`;
+
+    } catch (error) {
+        console.error("Error al obtener los registros:", error);
+    }
+}
+
+// ✅ Función para cerrar el modal
+function closeEmployeeModal() {
+    document.getElementById("employeeModal").style.display = "none";
+}
